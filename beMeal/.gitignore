@@ -24,4 +24,5 @@ dist-ssr
 *.sw?
 
 #hide your .env file
+.env
 
