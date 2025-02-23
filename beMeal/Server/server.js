@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { connectToDatabase} from './db.js'; // Import your MongoDB connection setup
+import {connectToDatabase} from './db.js'; // Import your MongoDB connection setup
 import dotenv from 'dotenv';
+import userRoutes from './Routes/userRoutes.js'; //import the routes for the user
 
 dotenv.config({ path: '../.env' });
 
@@ -11,7 +12,12 @@ const PORT = process.env.PORT || 5050;
 const app = express();
 
 app.use(cors());
+
+//so it can parse json coming in 
 app.use(express.json());
+
+//use the userRoutes
+app.use('/users', userRoutes);
 
 
 // Connect to MongoDB and start the server

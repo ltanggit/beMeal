@@ -1,4 +1,4 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import {mongoose} from 'mongoose';
 import dotenv from 'dotenv';
 
 
@@ -10,23 +10,13 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const uri = process.env.AVA_MONGODB_KEY;
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
 
 
 async function connectToDatabase() {
   try {
-    console.log(uri);
-    await client.connect();
+    // switched to mongoose which automatically uses this connection
+    await mongoose.connect(uri, { dbName: 'BeMeal' });
     console.log('Connected to MongoDB');
-    // Ping to confirm a successful connection
-    await client.db('UserProfiles').command({ ping: 1 });
-    console.log('Pinged your deployment. You successfully connected to MongoDB!');
     
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
@@ -34,4 +24,4 @@ async function connectToDatabase() {
   }
 }
 
-export { connectToDatabase};
+export {connectToDatabase};
