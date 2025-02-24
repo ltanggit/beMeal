@@ -16,7 +16,7 @@ postRoutes.post("/createPost", async (req, res) => {
   try {
     const { username, image, captionParsed } = req.body;
     if (!username || !image) {
-      return res.status(400).json({ error: "All fields are required" });
+      return res.status(400).json({ error: "all fields are required" });
     }
 
     let caption = "";
@@ -37,7 +37,7 @@ postRoutes.post("/createPost", async (req, res) => {
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "server error" });
+    res.status(500).json({ error: "error creating post" });
   }
 });
 
@@ -47,7 +47,42 @@ postRoutes.get("/allPosts", async (req, res) => {
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "server error" });
+    res.status(500).json({ error: "error getting all posts" });
+  }
+});
+
+postRoutes.put("/incLikes/:_postId", async (req, res) => {
+  try {
+    const postId = req.params._postId;
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "post not found" });
+    }
+
+    post.likeCount += 1;
+    const result = await post.save();
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "error updating likes" });
+  }
+});
+
+postRoutes.get("/getPost/:_postId", async (req, res) => {
+  try {
+    const postId = req.params._postId;
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "post not found" });
+    }
+
+    res.status(200).json(post);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "error getting post" });
   }
 });
 
