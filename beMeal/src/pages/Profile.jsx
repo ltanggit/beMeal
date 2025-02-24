@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EditProfile } from "../components/EditProfile"
+import { GalleryItem } from "../components/GalleryItem"
 
 
 export default function Profile() {
@@ -14,75 +15,68 @@ export default function Profile() {
     setIsEditing(false); 
   }
 
-  // if (isEditing) {
-  //   return (
-  //     <div>
-  //     <button
-  //       onClick={handleCloseClick}>
-  //       x
-  //     </button>
-  //     <EditProfile/>
-  //   </div>
-  //   )
-  // }
-  
-
   return (
-    <div className="profile-container">
-      <h1>welcome 'first-name'</h1>
-      {/*profile header*/}
-      <div className="profile-header">
-        <img 
-          className="profile-picture"
-          src="https://www.gravatar.com/avatar/?d=mp"
-          alt="profile-picture"
-        />
+    <>
+    <div className="bg-[#1A1A1A] min-h-screen w-screen">
+      <div className="flex flex-col items-center pt-10">
+        <div className="flex flex-row gap-8">
+          {/*profile picture*/}
+          <img 
+            className="w-32 h-32 rounded-full object-cover"
+            src="https://www.gravatar.com/avatar/?d=mp"
+            alt="profile-picture"
+          />
 
-        <div className="profile-info">
-          <h2>username</h2>
-          <p>bio</p>
+          {/*info container*/} 
+          <div className="pt-8">
+            <div className="font-semibold">
+              <h2 className="text-lg">first last</h2>
+              <h3>@username</h3>
+            </div>
+
+            {/*stats section*/}
+            <div className="flex flex-row gap-4 pt-3">
+              <button
+                  onClick={handleEditClick}>
+                  edit profile
+              </button>
+              <p className="pt-2">followers: </p>
+              <p className="pt-2">following: </p>
+            </div>
+            </div>
         </div>
 
-        {/*stats section*/}
-        <div className="stats-section">
-          <div>
-            <p>posts: </p>
+        {isEditing && (
+          <div className="">
+            <div className="edit-profile-box">
+              <EditProfile />
+            </div>
+
+            <button 
+              className="" 
+              onClick={handleCloseClick}>
+                cancel
+              </button>
+              <button
+                className="">
+                save
+              </button>
           </div>
-          <div>
-            <p>followers: </p>
+        )}
+      </div>
+      {/*Gallery Section*/}
+      <div>
+        <div className="flex justify-center pt-20">
+          <div className="grid grid-cols-4 gap-6">
+            <GalleryItem/>
+            <GalleryItem/>
           </div>
-          <div>
-            <p>following: </p>
-          </div>
+        </div>
+        <div>
+          
         </div>
       </div>
-
-      <div className="button-container">
-        <button
-          onClick={handleEditClick}>
-          edit
-        </button>
-      </div>
-
-      {isEditing && (
-        <div className="edit-popup">
-          <div className="edit-profile-box">
-            <EditProfile />
-          </div>
-
-          <button 
-            className="close-button" 
-            onClick={handleCloseClick}>
-              cancel
-            </button>
-            <button
-            className="save">
-              save
-            </button>
-        </div>
-      )}
-
-      {/*gallery*/}
     </div>
+    </>
   );
 }

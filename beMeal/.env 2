@@ -1,0 +1,3 @@
+AVA_MONGODB_KEY="mongodb+srv://gonicka656:JJKw3VI3rY7UAZfJ@initialcluster.rfhiz.mongodb.net/?retryWrites=true&w=majority&appName=InitialCluster"
+PORT=5050
+LOR_MONGODB_KEY="mongodb+srv://loreleitang:YdRSHRhYi68Moma9@initialcluster.rfhiz.mongodb.net/"
