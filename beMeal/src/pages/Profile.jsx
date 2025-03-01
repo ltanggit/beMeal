@@ -17,7 +17,7 @@ export default function Profile() {
 
   return (
     <>
-    <div className="bg-[#1A1A1A] min-h-screen w-screen">
+    <div className="bg-[#1A1A1A] min-h-screen w-screen text-white">
       <div className="flex flex-col items-center pt-10">
         <div className="flex flex-row gap-8">
           {/*profile picture*/}
