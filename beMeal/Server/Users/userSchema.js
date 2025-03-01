@@ -1,0 +1,19 @@
+import mongoose from "mongoose";
+
+const Schema = mongoose.Schema; //extracting Schema from mongoose making it easier to use
+
+const userSchema = new Schema({
+  userID: { type: String, required: true, index: true },
+  userName: { type: String, required: true, unique: true},
+  bio: { type: String, maxLength: 1000, default: "" },
+  profilePic: { type: Buffer, default: null },
+  numFollowers: { type: Number, default: 0 },
+  numFollowing: { type: Number, default: 0 },
+  followers: {type: [String], default : []},
+  following: {type: [String], default: []}
+});
+
+//will automatically use the connection without needing to reconnect
+const User = mongoose.model("userprofiles", userSchema);
+
+export default User;
