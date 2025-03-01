@@ -11,7 +11,6 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 const uri = process.env.AVA_MONGODB_KEY;
 
 
-
 async function connectToDatabase() {
   try {
     // switched to mongoose which automatically uses this connection
