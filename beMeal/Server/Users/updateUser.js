@@ -5,15 +5,15 @@ export const updateUser = async (req, res) => {
     try {
 
     //this should not be used for adding a follower
-    if (req.body.followers || req.body.following){
+    if (req.body.followers || req.body.following || req.body.numFollowing || req.body.numFollowers){
         return res.status(400).json({ error: 'Can no update followers or following with this route' });
     }
 
     //expecting the req to hold userID
     const userID = {'userID': req.body.userID}; //grab the userID in JSON format
-    let toUpdate = {...req.body} //create a shallow copy  dont want to mess with req
+    let toUpdate = {...req.body} //create a shallow copy dont want to mess with req
     delete toUpdate.userID //delete userID to only get the value that needs to be updated
-    const userInfo = await User.findOneAndUpdate(userID, toUpdate, {new : true}); // using Mongoose to update this person
+    const userInfo = await User.findOneAndUpdate(userID, { $set: toUpdate }, {new : true}); // using Mongoose to update this person
     if (!userInfo){ //if no user throw an error
         return res.status(404).json({ error: "User not found" });
     }
