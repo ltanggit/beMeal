@@ -1,5 +1,5 @@
 import Account from "./accountSchema.js";
-import User from "./userSchema.js"; // Import user schema to link accounts
+import User from "../Users/userSchema.js"; // Import user schema to link accounts
 
 export const registerAccount = async (req, res) => {
   try {

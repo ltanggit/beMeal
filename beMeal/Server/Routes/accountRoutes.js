@@ -1,6 +1,6 @@
 import express from "express";
-import { registerAccount } from "../Accounts/registerAccount.js";
-import { loginAccount } from "../Accounts/loginAccount.js";
+import { registerAccount } from "../Authentication/registerAccount.js";
+import { loginAccount } from "../Authentication/loginAccount.js";
 
 const router = express.Router();
 
