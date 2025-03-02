@@ -12,10 +12,10 @@ export const registerAccount = async (req, res) => {
     }
 
     // Check if a user profile exists for the userID
-    const existingUser = await User.findOne({ userID });
-    if (!existingUser) {
-      return res.status(400).json({ error: "User profile does not exist" });
-    }
+    // const existingUser = await User.findOne({ userID });
+    // if (!existingUser) {
+    //   return res.status(400).json({ error: "User profile does not exist" });
+    // }
 
     // Create new account
     const newAccount = new Account({ userID, userName, password });
