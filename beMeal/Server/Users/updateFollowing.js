@@ -24,7 +24,7 @@ export const follow = async (req, res) => {
                 $push: { 'follower': myID}
 
             }
-         )
+         );
 
          if(!Followers){
             return res.status(404).json({ error: "User trying to follow is not found" });
@@ -35,10 +35,10 @@ export const follow = async (req, res) => {
             $inc: { 'numFollowing': 1},
             $push: {'following': userFollow }
             }, 
-            {new : true})
+            {new : true});
 
         if (!Following){
-            return res.status(404).json({error: "User that is trying to follow someone is not found"})
+            return res.status(404).json({error: "User that is trying to follow someone is not found"});
         }
 
         res.status(200).json({'myStuff': {'numFollowing': Following.numFollowing}})
@@ -75,7 +75,7 @@ export const unfollow = async (req, res) => {
          }  
 
         if (!currentUser.following.includes(userUnfollow)){
-            return res.status(400).json({error: "You are not following this person"})
+            return res.status(400).json({error: "You are not following this person"});
         }
 
         if(!currentUser){
@@ -91,7 +91,7 @@ export const unfollow = async (req, res) => {
 
             },
             {new : true}
-         )
+         );
 
         //update your following to include the person you are trying to follow
         const Following = await User.findOneAndUpdate({'userID': myID}, {
@@ -99,9 +99,9 @@ export const unfollow = async (req, res) => {
             $pull: {'following': userUnfollow }
             },
             {new : true}
-        )
+        );
 
-        res.status(200).json({'myStuff': {'numFollowing': Following.numFollowing}})
+        res.status(200).json({'myStuff': {'numFollowing': Following.numFollowing}});
 
     }catch (error){
         console.error('Error unFollowing:', error);
