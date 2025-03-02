@@ -14,7 +14,7 @@ const accountSchema = new Schema({
 );
 
 // Hash password before saving to database
-accountScheme.pre("save", async function(next) {
+accountSchema.pre("save", async function(next) {
     if (!this.isModified("password")) return next();
     try {
         const salt = await bcrypt.genSalt(10);
@@ -25,6 +25,6 @@ accountScheme.pre("save", async function(next) {
     }
 });
 
-const Account = mongoose.model("Account", AccountSchema);
+const Account = mongoose.model("Account", accountSchema);
 
 export default Account;
