@@ -6,10 +6,11 @@ export const registerAccount = async (req, res) => {
     const { userID, userName, password } = req.body;
 
     // Check if user already exists
-    const existingAccount = await Account.findOne({ userName });
-    if (existingAccount) {
+    const existingUser = await Account.findOne({ userName });
+    if (existingUser) {
       return res.status(400).json({ error: "Username already taken" });
     }
+    
     const existingID = await Account.findOne({ userID });
     if (existingID) {
       return res.status(400).json({ error: "User ID already taken" });
@@ -21,9 +22,10 @@ export const registerAccount = async (req, res) => {
     }
 
     // Check if password is valid
-    if (password.length < 6) {
-      return res.status(400).json({ error: "Password must be at least 6 characters" });
-    }
+    // // Check if password is at least 6 characters
+    // if (password.length < 6) {
+    //   return res.status(400).json({ error: "Password must be at least 6 characters" });
+    // }
     // // Check if password has uppercase letter
     // if (!/[A-Z]/.test(password)) {
     //   return res.status(400).json({ error: "Password must contain at least one uppercase letter" });
@@ -41,15 +43,11 @@ export const registerAccount = async (req, res) => {
     //   return res.status(400).json({ error: "Password must contain at least one special character" });
     // }
 
-    // if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(password)) {
-    //     return res.status(400).json({ 
-    //         error: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character" 
-    //     });
-    //     }
-      
-
     const errors = [];
 
+    if (password.length < 6) {
+    errors.push("at least 6 characters");
+    }
     if (!/[A-Z]/.test(password)) {
     errors.push("at least one uppercase letter");
     }
@@ -66,13 +64,6 @@ export const registerAccount = async (req, res) => {
     if (errors.length) {
     return res.status(400).json({ error: `Password must contain ${errors.join(", ")}` });
     }
-
-
-    // Check if a user profile exists for the userID
-    // const existingUser = await User.findOne({ userID });
-    // if (!existingUser) {
-    //   return res.status(400).json({ error: "User profile does not exist" });
-    // }
 
     // Create new account
     const newAccount = new Account({ userID, userName, password });
