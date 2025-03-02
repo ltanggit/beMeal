@@ -86,4 +86,49 @@ postRoutes.get("/getPost/:_postId", async (req, res) => {
   }
 });
 
+postRoutes.post("/:postId/addComment", async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { username, content } = req.body;
+
+    if (!username || !content) {
+      return res.status(400).json({ error: "all fields are required" });
+    }
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "post not found" });
+    }
+
+    const newComment = {
+      username,
+      content,
+      timestamp: new Date(),
+    };
+
+    post.comments.push(newComment);
+
+    await post.save();
+    res.status(201).json(post);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "error adding comment" });
+  }
+});
+
+postRoutes.get("/:postId/getComments", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "post not found" });
+    }
+
+    res.status(200).json(post.comments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "error getting comments" });
+  }
+});
+
 export default postRoutes;

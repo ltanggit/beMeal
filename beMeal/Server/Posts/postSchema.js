@@ -6,6 +6,13 @@ const postSchema = new mongoose.Schema({
   caption: { type: String },
   timePosted: { type: Date, default: Date.now },
   likeCount: { type: Number, default: 0 },
+  comments: [
+    {
+      content: { type: String, required: true },
+      username: { type: String, required: true },
+      timePosted: { type: Date, default: Date.now },
+    },
+  ],
 });
 
 const Post = mongoose.model("Post", postSchema);
