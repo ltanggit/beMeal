@@ -8,44 +8,89 @@ export default function SignIn() {
 
   const handleSignIn = (e) => {
     e.preventDefault();
+    // TODO: Sign-in logic here
     navigate("/feed");
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
-      <h1 className="text-4xl font-bold mb-6">Sign In to BeMeal</h1>
-      <form
-        onSubmit={handleSignIn}
-        className="bg-[#1a1a1a] p-8 rounded-2xl shadow-md w-96 text-center"
-      >
-        <div className="mb-4">
-          <label className="block text-gray-400 text-left">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 bg-[#333] text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
-            required
-          />
+    // Outer container fills the screen and centers the content
+    <div className="flex items-center justify-center w-screen h-screen bg-black text-white px-8 py-8">
+      {/* Inner container arranges everything in a row */}
+      <div className="flex flex-col w-full max-w-5xl">
+        {/* Headings and buttons in the same row */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-bold">RETURNING USER</h2>
+          <h2 className="text-3xl font-bold">NEW USER</h2>
         </div>
-        <div className="mb-6">
-          <label className="block text-gray-400 text-left">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 bg-[#333] text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
-            required
-          />
+
+        <div className="flex flex-row w-full space-x-16">
+          {/* LEFT COLUMN: Returning User */}
+          <div className="flex-1 flex flex-col justify-center">
+            <form onSubmit={handleSignIn} className="w-full max-w-sm">
+              <div className="mb-4">
+                <label className="block text-gray-400 mb-1" htmlFor="email">
+                  Email *
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3 py-2 bg-[#333] text-white
+                             border border-gray-600 rounded-lg
+                             focus:outline-none focus:ring-2 focus:ring-white"
+                />
+              </div>
+              <div className="mb-6">
+                <label className="block text-gray-400 mb-1" htmlFor="password">
+                  Password *
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-3 py-2 bg-[#333] text-white
+                             border border-gray-600 rounded-lg
+                             focus:outline-none focus:ring-2 focus:ring-white"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-white text-black py-2
+                           rounded-lg text-lg font-bold
+                           hover:bg-gray-200 transition"
+              >
+                LOG IN
+              </button>
+            </form>
+            <a
+              href="#"
+              className="text-blue-400 mt-3 inline-block underline hover:text-blue-300"
+            >
+              Reset your password
+            </a>
+          </div>
+
+          {/* RIGHT COLUMN: New User */}
+          <div className="flex-1 flex flex-col justify-center">
+            <ul className="list-disc list-inside mb-6 space-y-1 text-gray-300">
+              <li>Post Your Meals</li>
+              <li>Connect with Others</li>
+              <li>See Meals Around the World</li>
+            </ul>
+            <button
+              onClick={() => navigate("/signup")}
+              className="bg-white text-black font-bold py-2 px-4
+                         rounded hover:bg-gray-200 transition"
+            >
+              SIGN UP
+            </button>
+          </div>
         </div>
-        <button
-          type="submit"
-          className="w-full bg-white text-black py-2 rounded-lg text-lg font-bold hover:bg-gray-200 transition"
-        >
-          Sign In
-        </button>
-      </form>
-      <p className="mt-6 text-gray-500 text-sm">The back can never be too big. Be Meal.</p>
+      </div>
     </div>
   );
 }
