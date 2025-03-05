@@ -3,18 +3,18 @@ import User from "../Users/userSchema.js"; // Import user schema to link account
 
 export const registerAccount = async (req, res) => {
   try {
-    const { userID, userName, password } = req.body;
+    const { userName, password } = req.body;
 
-    // Check if user already exists
-    const existingUser = await Account.findOne({ userName });
-    if (existingUser) {
+    // Check if userName already exists
+    const existingUserName = await Account.findOne({ userName });
+    if (existingUserName) {
       return res.status(400).json({ error: "Username already taken" });
     }
     
-    const existingID = await Account.findOne({ userID });
-    if (existingID) {
-      return res.status(400).json({ error: "User ID already taken" });
-    }
+    // const existingID = await Account.findOne({ userID });
+    // if (existingID) {
+    //   return res.status(400).json({ error: "User ID already taken" });
+    // }
 
     // Check if userName is valid
     if (userName.length < 3) {
@@ -22,27 +22,6 @@ export const registerAccount = async (req, res) => {
     }
 
     // Check if password is valid
-    // // Check if password is at least 6 characters
-    // if (password.length < 6) {
-    //   return res.status(400).json({ error: "Password must be at least 6 characters" });
-    // }
-    // // Check if password has uppercase letter
-    // if (!/[A-Z]/.test(password)) {
-    //   return res.status(400).json({ error: "Password must contain at least one uppercase letter" });
-    // }
-    // // Check if password has lowercase letter
-    // if (!/[a-z]/.test(password)) {
-    //   return res.status(400).json({ error: "Password must contain at least one lowercase letter" });
-    // }
-    // // Check if password has number
-    // if (!/[0-9]/.test(password)) {
-    //   return res.status(400).json({ error: "Password must contain at least one number" });
-    // }
-    // // Check if password has special character
-    // if(!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-    //   return res.status(400).json({ error: "Password must contain at least one special character" });
-    // }
-
     const errors = [];
 
     if (password.length < 6) {
@@ -66,8 +45,16 @@ export const registerAccount = async (req, res) => {
     }
 
     // Create new account
-    const newAccount = new Account({ userID, userName, password });
+    const newAccount = new Account({ userName, password });
     await newAccount.save();
+
+    // Create new user
+    const createdAccount = await Account.findOne({ userName });
+    const newUser = new User({ 
+      "userID": createdAccount._id,
+      "userName": createdAccount.userName
+    });
+    await newUser.save();
 
     res.status(201).json({ message: "Account created successfully" });
   } catch (error) {

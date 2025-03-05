@@ -20,10 +20,10 @@ export const loginAccount = async (req, res) => {
 
     // Generate JWT token (expires in 1 day)
     const token = jwt.sign(
-      { userID: account.userID, userName: account.userName },
+      { userID: account._id, userName: account.userName },
       "your_jwt_secret",
       // { expiresIn: "1d" }
-      { expiresIn: 3600}
+      { expiresIn: 3600} // 1 hour
     );
 
     res.status(200).json({ message: "Login successful", token });

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema; //extracting Schema from mongoose making it easier to use
 
 const userSchema = new Schema({
-  userID: { type: String, required: true, index: true },
+  userID: { type: mongoose.Schema.Types.ObjectID, required: true, index: true },
   userName: { type: String, required: true, unique: true},
   bio: { type: String, maxLength: 1000, default: "" },
   profilePic: { type: Buffer, default: null },
