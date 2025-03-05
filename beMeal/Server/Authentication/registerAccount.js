@@ -10,11 +10,6 @@ export const registerAccount = async (req, res) => {
     if (existingUserName) {
       return res.status(400).json({ error: "Username already taken" });
     }
-    
-    // const existingID = await Account.findOne({ userID });
-    // if (existingID) {
-    //   return res.status(400).json({ error: "User ID already taken" });
-    // }
 
     // Check if userName is valid
     if (userName.length < 3) {
@@ -57,6 +52,7 @@ export const registerAccount = async (req, res) => {
     await newUser.save();
 
     res.status(201).json({ message: "Account created successfully" });
+    
   } catch (error) {
     console.error("Error registering account:", error);
     res.status(500).json({ error: "Internal Server Error" });
