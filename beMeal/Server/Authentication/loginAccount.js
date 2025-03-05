@@ -26,7 +26,7 @@ export const loginAccount = async (req, res) => {
       { expiresIn: 3600} // 1 hour
     );
 
-    res.status(200).json({ message: "Login successful", token });
+    res.status(200).json({ 'userID': account._id ,message: "Login successful", token });
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ error: "Internal Server Error" });
