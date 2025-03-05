@@ -22,7 +22,8 @@ export const loginAccount = async (req, res) => {
     const token = jwt.sign(
       { userID: account.userID, userName: account.userName },
       "your_jwt_secret",
-      { expiresIn: "1d" }
+      // { expiresIn: "1d" }
+      { expiresIn: 3600}
     );
 
     res.status(200).json({ message: "Login successful", token });
