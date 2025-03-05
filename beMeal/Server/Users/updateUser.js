@@ -5,8 +5,8 @@ export const updateUser = async (req, res) => {
     try {
 
     //this should not be used for adding a follower
-    if (req.body.followers || req.body.following || req.body.numFollowing || req.body.numFollowers){
-        return res.status(400).json({ error: 'Can no update followers or following with this route' });
+    if (req.body.followers || req.body.following || req.body.numFollowing || req.body.numFollowers || req.body.userName){
+        return res.status(400).json({ error: 'Can not update followers, following, or userName with this route' });
     }
 
     //expecting the req to hold userID
