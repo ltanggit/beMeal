@@ -12,6 +12,7 @@ const handleFileChange = (event) => {
     setSelectedFile(file);
   }
 }
+
   return (
     <div className="bg-black min-h-screen w-screen text-white p-4 relative flex flex-col">
       <Header/>
