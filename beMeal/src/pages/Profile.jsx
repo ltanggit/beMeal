@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { EditProfile } from "../components/EditProfile"
 import { GalleryItem } from "../components/GalleryItem"
@@ -6,18 +6,21 @@ import Header from '../components/Header';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing(true);
+    setTimeout(() => setIsAnimating(true), 10);
   }
 
   const handleCloseClick = () => {
-    setIsEditing(false); 
+    setIsAnimating(false);
+    setTimeout(() => setIsEditing(false), 300);
   }
 
   return (
     <>
-    <div className="bg-black min-h-screen w-screen text-white p-4">
+    <div className="bg-black min-h-screen w-screen text-white p-4 relative">
       <Header/>
       <div className="flex flex-col items-center pt-10">
         <div className="flex flex-row gap-8">
@@ -31,31 +34,26 @@ export default function Profile() {
           {/*info container*/} 
           <div className="pt-8">
             <div className="font-semibold">
-              <h2 className="text-lg">first last</h2>
+              <h2 className="text-lg">First Last</h2>
               <h3>@username</h3>
             </div>
 
             {/*stats section*/}
-            <div className="flex flex-row gap-4 pt-3">
+            <div className="flex flex-col gap-4 pt-3">
+              <div className="flex flex-row gap-4">
+                <p className="pt-2">Followers: xx</p>
+                <p className="pt-2">Following: xx</p>
+              </div>
               <button
                 className="bg-white text-black hover:bg-gray-200 rounded-lg w-[14vw]"
                   onClick={handleEditClick}>
-                  edit profile
+                  Edit Profile
               </button>
-              <p className="pt-2">followers: xx</p>
-              <p className="pt-2">following: xx</p>
-            </div>
-            </div>
-        </div>
-
-        {isEditing && (
-          <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm transition-opacity duration-300">
-            <div className="p-6 rounded-lg shadow-lg transform scale-90 opacity-100 transition-all duration-300 ease-out animate-popup">
-              <EditProfile onClose={handleCloseClick}/>
             </div>
           </div>
-        )}
+        </div>
       </div>
+      
       {/*Gallery Section*/}
       <div>
         <div className="flex justify-center pt-20">
@@ -64,10 +62,26 @@ export default function Profile() {
             <GalleryItem/>
           </div>
         </div>
-        <div>
-          
-        </div>
       </div>
+
+      {isEditing && (
+        <div className="fixed inset-0 z-50">
+          <div 
+            className={`absolute inset-0 transition-all duration-300 
+                       ${isAnimating ? 'backdrop-blur-sm' : 'backdrop-blur-none bg-opacity-0'}`}
+          />
+          
+          <div className="flex items-center justify-center h-full w-full">
+            <div 
+              className={`p-6 rounded-lg shadow-lg z-50 relative
+                        transition-all duration-300 ease-in-out
+                        ${isAnimating ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+            >
+              <EditProfile onClose={handleCloseClick}/>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
     </>
   );
