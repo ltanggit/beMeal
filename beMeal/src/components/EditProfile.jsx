@@ -6,7 +6,8 @@ export function EditProfile({ onClose }) {
     const handleProfileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-            setSelectedImage(file);
+            const imageURL = URL.createObjectURL(file); 
+            setSelectedImage(imageURL);
         }
     }
 
@@ -25,7 +26,7 @@ export function EditProfile({ onClose }) {
                     
                     <img 
                         className="w-24 h-24 rounded-full object-cover border-2 border-gray-500"
-                        src="https://www.gravatar.com/avatar/?d=mp" // Placeholder profile pic
+                        src={selectedImage || "https://www.gravatar.com/avatar/?d=mp"} 
                         alt="Profile"
                     />
                     <button 
@@ -33,10 +34,11 @@ export function EditProfile({ onClose }) {
                         onClick={() => document.getElementById('fileInput').click()} >
                         Change Profile Picture
                     </button>
+                    {selectedImage && <p className="text-[#4CAF50] text-sm">Profile Picture Updated!</p>}
                 </div>
 
                 {/*Inputs*/}
-                <div className="flex flex-col items-center mt-8" >
+                <div className="flex flex-col items-center mt-4" >
                     <div className="flex flex-col">
                          <label>New Username: </label>
                         <input

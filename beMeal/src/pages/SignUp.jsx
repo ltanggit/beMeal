@@ -82,7 +82,7 @@ export default function SignUp() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-3 py-2 bg-[#333] text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
             required
-          />
+          /> 
         </div>
         {error && (
           <p className="text-red-500 mb-4">{error}</p>
