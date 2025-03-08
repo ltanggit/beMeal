@@ -5,6 +5,8 @@ import { follow } from '../Users/updateFollowing.js';
 import { unfollow } from '../Users/updateFollowing.js';
 import { getUser } from '../Users/getUser.js';
 import { searchUsers } from '../Users/searchUsers.js';
+import { getStreak } from './getStreak.js';
+import { updateStreak } from './updateStreak.js';
 
 const router = express.Router();
 
@@ -14,6 +16,8 @@ router.put('/follow', follow); //create put for following a user
 router.put('/unfollow', unfollow); //create put for unfollowing a user
 router.get('/getUser', getUser); //create get to get users information
 router.get('/searchUsers', searchUsers); //create get to ge all the matching userNames
+router.get('/getStreak', getStreak); //create get to get the streak count
+router.put('/updateStreak', updateStreak); //create put to update the streak count
 
 
 export default router;
