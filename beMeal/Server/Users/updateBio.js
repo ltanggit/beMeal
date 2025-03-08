@@ -1,11 +1,11 @@
 import User from './userSchema.js'; 
 
-export const updateUser = async (req, res) => {
+export const updateBio = async (req, res) => {
 
     try {
 
     //this should not be used for adding a follower
-    if (req.body.followers || req.body.following || req.body.numFollowing || req.body.numFollowers || req.body.userName){
+    if (req.body.followers || req.body.following || req.body.numFollowing || req.body.numFollowers || req.body.userName || req.body.profilePic ){
         return res.status(400).json({ error: 'Can not update followers, following, or userName with this route' });
     }
 

@@ -1,5 +1,6 @@
 import Account from "./accountSchema.js";
 import User from "../Users/userSchema.js";
+import cloudinary from "../cloudinaryUsers.js";
 
 export const deleteAccount = async (req, res) => {
   try {
@@ -11,6 +12,8 @@ export const deleteAccount = async (req, res) => {
     if (!account) {
       return res.status(400).json({ error: "Account does not exist" });
     }
+
+    await cloudinary.uploader.destroy(account._id.toString());
 
     await User.deleteOne({'userID': account._id});
     res.status(200).json({ message: "User deleted" });

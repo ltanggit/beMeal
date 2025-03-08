@@ -10,7 +10,7 @@ const router = express.Router();
 // User authentication routes
 router.post("/register", registerAccount);
 router.post("/login", loginAccount);
-router.delete("/delete", deleteAccount);
+router.delete("c", deleteAccount);
 router.put("/updateUserName", updateUserName);
 // router.put("/updatePassword", updatePassword);
 
