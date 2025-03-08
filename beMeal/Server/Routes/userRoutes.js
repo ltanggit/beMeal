@@ -5,8 +5,8 @@ import { follow } from '../Users/updateFollowing.js';
 import { unfollow } from '../Users/updateFollowing.js';
 import { getUser } from '../Users/getUser.js';
 import { searchUsers } from '../Users/searchUsers.js';
-import { getStreak } from './getStreak.js';
-import { updateStreak } from './updateStreak.js';
+import { getStreak } from '../Users/getStreak.js';
+import { updateStreak } from '../Users/updateStreak.js';
 
 const router = express.Router();
 

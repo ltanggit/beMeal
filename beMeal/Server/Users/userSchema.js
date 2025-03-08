@@ -11,7 +11,9 @@ const userSchema = new Schema({
   numFollowing: { type: Number, default: 0 },
   followers: {type: [String], default : []},
   following: {type: [String], default: []},
-  streakCount: { type: Number, default: 0 }
+  streakCount: { type: Number, default: 0 },
+  posts: { type: [mongoose.Schema.Types.ObjectID], default: [] },
+  lastPostDate: { type: Date, default: null },
 });
 
 //will automatically use the connection without needing to reconnect
