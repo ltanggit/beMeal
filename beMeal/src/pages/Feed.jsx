@@ -1,30 +1,41 @@
 import { useState, useEffect } from 'react';
 import Header from '../components/Header';
-
-const mockPosts = [
-  {
-    id: 1,
-    username: 'daEggert',
-    frontImageUrl: 'https://assets.simpleviewinc.com/simpleview/image/upload/c_limit,q_80,w_1200/v1/crm/oakland/Raising-Canes_FDF90360-0B7E-A529-857B9EAFB5B05822-fdf8f85cad40d44_fdf96172-0f22-2309-e2585beab2f9bc1c.png',
-    backImageUrl: 'https://samueli.ucla.edu/wp-content/uploads/samueli/Paul_Eggert.jpg',
-    caption: 'Enjoying chicken fingers! 🎉',
-  },
-  {
-    id: 2,
-    username: 'ProfessorE',
-    frontImageUrl: 'https://assets.simpleviewinc.com/simpleview/image/upload/c_limit,q_80,w_1200/v1/crm/oakland/Raising-Canes_FDF90360-0B7E-A529-857B9EAFB5B05822-fdf8f85cad40d44_fdf96172-0f22-2309-e2585beab2f9bc1c.png',
-    backImageUrl: 'https://samueli.ucla.edu/wp-content/uploads/samueli/Paul_Eggert.jpg',
-    caption: 'A beautiful evening!',
-  },
-];
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Feed() {
   const [posts, setPosts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
-    setPosts(mockPosts);
-  }, []);
+    if (!user) return;
+    
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch("http://localhost:5050/posts/allPosts", {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${user.token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch posts");
+        }
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    fetchPosts();
+  }, [user]);
+
+  if (!user) {
+    return <div>Please log in to view posts.</div>;
+  }
 
   const nextPost = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % posts.length);
@@ -48,17 +59,14 @@ export default function Feed() {
               </div>
               <div className="relative w-full h-full flex items-center justify-center">
                 <img
-                  src={posts[currentIndex].frontImageUrl}
-                  alt="Front Post"
+                  src={posts[currentIndex].image}
+                  alt="Post"
                   className="w-full h-full object-cover rounded-3xl object-center"
                 />
-                <img
-                  src={posts[currentIndex].backImageUrl}
-                  alt="Back Post"
-                  className="absolute top-2 left-2 w-20 h-20 border-2 border-black rounded-3xl shadow-lg object-cover object-center"
-                />
               </div>
-              <p className="mt-2 text-center">{posts[currentIndex].caption}</p>
+              {posts[currentIndex].caption && (
+                <p className="mt-2 text-center">{posts[currentIndex].caption}</p>
+              )}
             </>
           )}
         </div>
