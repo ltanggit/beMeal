@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
         console.warn("Token expired during session, logging out.");
         logout();
       }
-    }, 1000);
+    }, 1000000);
     return () => clearInterval(interval);
   }, [user]);
 
