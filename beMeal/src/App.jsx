@@ -30,7 +30,11 @@ export default function App() {
               </PrivateRoute>
             }
           />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={
+            <PrivateRoute>
+            <Profile />
+            </PrivateRoute>
+            } />
         </Routes>
       </AuthProvider>
     </Router>
