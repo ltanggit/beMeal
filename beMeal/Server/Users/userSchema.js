@@ -10,7 +10,8 @@ const userSchema = new Schema({
   numFollowers: { type: Number, default: 0 },
   numFollowing: { type: Number, default: 0 },
   followers: {type: [String], default : []},
-  following: {type: [String], default: []}
+  following: {type: [String], default: []},
+  streakCount: { type: Number, default: 0 }
 });
 
 //will automatically use the connection without needing to reconnect
