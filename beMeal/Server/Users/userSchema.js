@@ -12,7 +12,7 @@ const userSchema = new Schema({
   followers: { type: [String], default: [] },
   following: { type: [String], default: [] },
   streakCount: { type: Number, default: 0 },
-  posts: { type: [mongoose.Schema.Types.ObjectID], default: [] },
+  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post", default: [] }],
   lastPostDate: { type: Date, default: null },
 });
 

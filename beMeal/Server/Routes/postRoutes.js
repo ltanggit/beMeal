@@ -1,7 +1,7 @@
 // postRoutes.js
 import express from "express";
 import Post from "../Posts/postSchema.js";
-import User from "../Users/userSchema.js"
+import User from "../Users/userSchema.js";
 import { authMiddleware } from "../Authentication/middleware.js";
 
 const postRoutes = express.Router();
@@ -32,8 +32,8 @@ postRoutes.post("/createPost", async (req, res) => {
     // console.log(caption);
 
     const newPost = new Post({
-        userID,
-        username: user.userName,
+      userID,
+      username: user.userName,
       image,
       caption: caption || "",
 
@@ -42,13 +42,15 @@ postRoutes.post("/createPost", async (req, res) => {
     });
 
     const result = await newPost.save();
+    user.posts.push(result._id);
+    await user.save();
+
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "error creating post" });
   }
 });
-
 
 //change allPosts to getFeed
 
@@ -81,17 +83,36 @@ postRoutes.get("/getFeed/:userID", async (req, res) => {
     const postsFeed = await Post.find({
       userID: { $in: user.following },
       timePosted: { $gte: today },
-    }).sort({ timePosted: -1 })
-    .populate({
-      path: "userID",
-      model: "userprofiles",
-      select: "userName",
-    });
+    })
+      .sort({ timePosted: -1 })
+      .populate({
+        path: "userID",
+        model: "userprofiles",
+        select: "userName",
+      });
 
     res.status(200).json(postsFeed);
-  } catch (error){
+  } catch (error) {
     console.error(error);
     res.status(500).json({ error: "error getting feed" });
+  }
+});
+
+postRoutes.get("/getUserPosts/:userID", async (req, res) => {
+  try {
+    const { userID } = req.params;
+    const user = await User.findOne({ userID: userID }).populate({
+      path: "posts",
+      model: "Post",
+      select: "-__v",
+    });
+    if (!user) {
+      return res.status(404).json({ error: "user not found" });
+    }
+    res.status(200).json(user.posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "error retrieving all user's posts" });
   }
 });
 
