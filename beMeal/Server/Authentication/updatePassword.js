@@ -36,12 +36,10 @@ export const updatePassword = async (req, res) => {
     }
 
     // Update password
-    const passWord = await account.findOneAndUpdate({'id_': userID}, { $set: {'password': password} }, {new : true});
-    console.log('account password saved');
-
-    if(!passWord){
-      return res.status(404).json( {error : "error updating password in account" });
-    }
+    account.password = password;
+    await account.save();
+    console.log("Password" + password + "updated for account" + account._id);
+    res.status(200).json({ message: "Password updated" });
 
 } catch (error) {
     console.error("Error updating password:", error);
