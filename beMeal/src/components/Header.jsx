@@ -43,19 +43,19 @@ export default function Header() {
         {/*Feed, Post, Profile Buttons*/}
         <div className="flex gap-4 absolute right-4">
           <button 
-            onClick={() => navigate('/Feed')} 
+            onClick={() => navigate('/feed')} 
             className="bg-white text-black px-4 py-2 rounded-lg text-lg font-bold hover:bg-gray-200 transition"
           >
             Feed
           </button>
           <button 
-            onClick={() => navigate('/Upload')} 
+            onClick={() => navigate('/upload')} 
             className="bg-white text-black px-4 py-2 rounded-lg text-lg font-bold hover:bg-gray-200 transition"
           >
             Post
           </button>
           <button 
-            onClick={() => navigate('/Profile')} 
+            onClick={() => navigate('/profile')} 
             className="bg-white text-black px-4 py-2 rounded-lg text-lg font-bold hover:bg-gray-200 transition"
           >
             Profile
