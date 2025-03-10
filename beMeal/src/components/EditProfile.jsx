@@ -9,6 +9,11 @@ export function EditProfile({ onClose }) {
     const [bio, setBio] = useState("");
     const { user } = useAuth();
 
+    const [usernameChange, setUsernameChange] = useState(false);
+    const [bioChange, setBioChange] = useState(false);
+    const [passwordChange, setPasswordChange] = useState(false);
+    const [profilePicChange, setProfilePicChange] = useState(false);
+
     useEffect(() => {
         if (user) {
             const fetchUserData = async () => {
@@ -25,10 +30,8 @@ export function EditProfile({ onClose }) {
             const userData = await userProfile.json(); //parse the json response  
             console.log(userData);  // Log the full response to see its structure
             setImagePreview(userData.userInfo.profilePic);  // Assuming 'profilePic' is inside the returned object
-            console.log(imagePreview);
-            console.log(user);
-            setUsername(user.username);  
-            setPassword(user.password);
+            setUsername(userData.userInfo.userName);  
+            setPassword(userData.userInfo.password);
             setBio(userData.userInfo.bio);    
         }
         fetchUserData();
@@ -36,39 +39,57 @@ export function EditProfile({ onClose }) {
     }, [user]);
 
 
-    const handleProfileChange = (event) => {
-        const file = event.target.files[0];
-        console.log(file);
-        if (file) {
-            // Store the actual file for upload
-            setSelectedImage(file);
-            const imageURL = URL.createObjectURL(file); 
-            setImagePreview(imageURL);
+    const handleProfileChange = (e) => {
+        const { name, value, files } = e.target;
+        
+        if (name === "username") {
+            setUsername(value);
+            setUsernameChange(true);  
+        }
+        if (name === "bio") {
+            setBio(value);
+            setBioChange(true); 
+        }
+        if (name === "password") {
+            setPassword(value);
+            setPasswordChange(true);  
+        }
+        
+        if (files) {
+            const file = files[0];
+            if (file) {
+                setSelectedImage(file);
+                const imageURL = URL.createObjectURL(file);
+                setImagePreview(imageURL);
+                setProfilePicChange(true);  
+            }
         }
     }
+    
 
     const handleSaveClick = async () => {
         try {
-            console.log(bio);
-            const bioResponse = await fetch(`http://localhost:5050/users/updateBio`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${user.token}`,
-                },
-                body: JSON.stringify({
-                    userID: user.userID,
-                    bio: bio,
-                }),
-            });
-    
-            const bioResult = await bioResponse.json();
-    
-            if (!bioResponse.ok) {
-                throw new Error("Failed to change user bio");
+            if (bioChange) {
+                const bioResponse = await fetch(`http://localhost:5050/users/updateBio`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${user.token}`,
+                    },
+                    body: JSON.stringify({
+                        userID: user.userID,
+                        bio: bio,
+                    }),
+                });
+        
+                const bioResult = await bioResponse.json();
+        
+                if (!bioResponse.ok) {
+                    throw new Error("Failed to change user bio");
+                }
             }
     
-            if (username) {
+            if (usernameChange) {
                 const usernameResponse = await fetch(`http://localhost:5050/accounts/updateUserName`, {
                     method: "PUT",
                     headers: {
@@ -82,6 +103,7 @@ export function EditProfile({ onClose }) {
                 });
     
                 const usernameResult = await usernameResponse.json();
+                console.log(username);
     
                 if (!usernameResponse.ok) {
                     throw new Error("Failed to change username");
@@ -108,7 +130,7 @@ export function EditProfile({ onClose }) {
             //     }
             // }
     
-            if (selectedImage) {
+            if (profilePicChange) {
                 const form = new FormData()
                 form.append('file', selectedImage);
                 form.append('userID', user.userID)
@@ -165,8 +187,9 @@ export function EditProfile({ onClose }) {
                          <label>New Username: </label>
                         <input
                             className="bg-[#333] text-white border border-gray-600 rounded-lg"
+                            name="username"
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={handleProfileChange}
                         />
                         <br/>
                     </div>
@@ -174,8 +197,9 @@ export function EditProfile({ onClose }) {
                         <label>New Password: </label>
                         <input
                         className="bg-[#333] text-white border border-gray-600 rounded-lg"
+                        name="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={handleProfileChange}
                         />
                         <br/>
                     </div>
@@ -183,8 +207,9 @@ export function EditProfile({ onClose }) {
                         <label>New Bio: </label>
                         <textarea
                             className="bg-[#333] text-white border border-gray-600 rounded-lg"
+                            name="bio"
                             value={bio}
-                            onChange={(e) => setBio(e.target.value)}
+                            onChange={handleProfileChange}
                         />  
                     </div> 
                 </div>
