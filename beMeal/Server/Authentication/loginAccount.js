@@ -23,7 +23,7 @@ export const loginAccount = async (req, res) => {
       { userID: account._id, userName: account.userName },
       "your_jwt_secret",
       // { expiresIn: "1d" }
-      { expiresIn: 3600} // 1 hour
+      { expiresIn: "1h"} // 1 hour
     );
 
     res.status(200).json({ 'userID': account._id ,message: "Login successful", token });

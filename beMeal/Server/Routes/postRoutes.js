@@ -2,6 +2,7 @@
 import express from "express";
 import Post from "../Posts/postSchema.js";
 import User from "../Users/userSchema.js"
+import { authMiddleware } from "../Authentication/middleware.js";
 
 const postRoutes = express.Router();
 
@@ -48,8 +49,10 @@ postRoutes.post("/createPost", async (req, res) => {
   }
 });
 
+
 //change allPosts to getFeed
-postRoutes.get("/allPosts", async (req, res) => {
+
+postRoutes.get("/allPosts", authMiddleware, async (req, res) => {
   try {
     const posts = await Post.find({}).sort({ timePosted: -1 });
     res.status(200).json(posts);

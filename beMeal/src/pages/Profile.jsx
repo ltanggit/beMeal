@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { EditProfile } from "../components/EditProfile"
 import { GalleryItem } from "../components/GalleryItem"
+import { useAuth } from "../context/AuthContext";
 import Header from '../components/Header';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const { user } = useAuth();
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -18,6 +20,35 @@ export default function Profile() {
     setTimeout(() => setIsEditing(false), 300);
   }
 
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5050/users/getUser`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({ userID: user.userID }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+
+        const data = await response.json();
+        setUserData(data);
+        console.log(data)
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
+
   return (
     <>
     <div className="bg-black min-h-screen w-screen text-white p-4 relative">
@@ -27,22 +58,22 @@ export default function Profile() {
           {/*profile picture*/}
           <img 
             className="w-32 h-32 rounded-full object-cover"
-            src="https://www.gravatar.com/avatar/?d=mp"
+            src={userData?.userInfo?.profilePicture || "https://www.gravatar.com/avatar/?d=mp"}
             alt="profile-picture"
           />
 
           {/*info container*/} 
           <div className="pt-8">
             <div className="font-semibold">
-              <h2 className="text-lg">First Last</h2>
-              <h3>@username</h3>
+            <h3>@{userData?.userInfo?.userName}</h3>
             </div>
+            <p>{userData?.userInfo?.bio}</p>
 
             {/*stats section*/}
             <div className="flex flex-col gap-4 pt-3">
               <div className="flex flex-row gap-4">
-                <p className="pt-2">Followers: xx</p>
-                <p className="pt-2">Following: xx</p>
+                <p className="pt-2">Followers: {userData?.userInfo?.numFollowers}</p>
+                <p className="pt-2">Following: {userData?.userInfo?.numFollowing}</p>
               </div>
               <button
                 className="bg-white text-black hover:bg-gray-200 rounded-lg w-[14vw]"
