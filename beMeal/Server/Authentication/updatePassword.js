@@ -2,10 +2,10 @@ import Account from "./accountSchema.js";
 
 export const updatePassword = async (req, res) => {
   try {
-    const { userName, password } = req.body;
+    const { userID, password } = req.body;
 
     // Find account by userName
-    const account = await Account.findOne({ userName });
+    const account = await Account.findOne({ userID });
     // if account does not exist, return error
     if (!account) {
       return res.status(400).json({ error: "Account does not exist" });
