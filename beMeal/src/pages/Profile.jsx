@@ -98,7 +98,7 @@ export default function Profile() {
               src={userData?.userInfo?.profilePic}
               alt="profile-picture"
             />
-            <h3 className="bg-yellow-500 text-black font-bold rounded-lg shadow-lg w-4/5 mt-3.5">🔥 Streak: {userData?.userInfo?.streakCount}</h3>
+            <h3 className="text-white font-bold rounded-lg shadow-lg w-4/5 mt-3.5">🔥 Streak: {userData?.userInfo?.streakCount}</h3>
           </div>
 
           {/*info container*/} 
@@ -126,18 +126,19 @@ export default function Profile() {
       
       {/*Gallery Section*/}
       <div>
-        <div className="flex justify-center pt-20">
-          {userPosts.length > 0 ? (
-          userPosts.map((post) => (
-            <div className="grid grid-cols-4 gap-6" key={post._id}> 
-              <GalleryItem image={post.image} caption={post.caption} likes={post.likeCount}/>
-            </div>
-             ))
-            ) : (
-              <p className="text-gray-500"> No posts avaliable. Time to post your first meal! 🍽️</p>
-            )} 
-        </div>
+      <div className="flex justify-center pt-20">
+        {userPosts.length > 0 ? (
+          <div className="grid grid-cols-4 gap-6"> 
+            {userPosts.map((post) => (
+              <GalleryItem key={post._id} image={post.image} caption={post.caption} likes={post.likeCount} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500"> No posts available. Time to post your first meal! 🍽️</p>
+        )}
       </div>
+    </div>
+
 
       {isEditing && (
         <div className="fixed inset-0 z-50">
