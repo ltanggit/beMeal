@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 
 export function EditProfile({ onClose }) {
     const [selectedImage, setSelectedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [bio, setBio] = useState("");
@@ -10,11 +11,28 @@ export function EditProfile({ onClose }) {
 
     useEffect(() => {
         if (user) {
+            const fetchUserData = async () => {
+                const userProfile = await fetch(`http://localhost:5050/users/getUser`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user.token}`,
+                },
+                body: JSON.stringify({
+                    userID: user.userID,
+                }),
+            });
+            const userData = await userProfile.json(); //parse the json response  
+            console.log(userData);  // Log the full response to see its structure
+            setImagePreview(userData.userInfo.profilePic);  // Assuming 'profilePic' is inside the returned object
+            console.log(imagePreview);
+            console.log(user);
             setUsername(user.username);  
             setPassword(user.password);
-            setBio(user.bio);            
-            setSelectedImage(user.profilePic); 
+            setBio(userData.userInfo.bio);    
         }
+        fetchUserData();
+    }
     }, [user]);
 
 
@@ -22,8 +40,10 @@ export function EditProfile({ onClose }) {
         const file = event.target.files[0];
         console.log(file);
         if (file) {
+            // Store the actual file for upload
+            setSelectedImage(file);
             const imageURL = URL.createObjectURL(file); 
-            setSelectedImage(imageURL);
+            setImagePreview(imageURL);
         }
     }
 
@@ -88,24 +108,24 @@ export function EditProfile({ onClose }) {
             //     }
             // }
     
-            // if (selectedImage) {
-            //     const picResponse = await fetch(`http://localhost:5050/users/uploadProfilePic`, {
-            //         method: "PUT",
-            //         headers: {
-            //             "Authorization": `Bearer ${user.token}`,
-            //         },
-            //         body: JSON.stringify({
-            //             userID: user.userID,
-            //             filepath: selectedImage,
-            //         }),
-            //     });
+            if (selectedImage) {
+                const form = new FormData()
+                form.append('file', selectedImage);
+                form.append('userID', user.userID)
+                const picResponse = await fetch(`http://localhost:5050/users/uploadProfilePic`, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${user.token}`,
+                    },
+                    body: form,
+                });
                 
-            //     const picResult = await picResponse.json();
+                const picResult = await picResponse.json();
     
-            //     if (!picResponse.ok) {
-            //         throw new Error("Failed to change profile picture");
-            //     }
-            // }
+                if (!picResponse.ok) {
+                    throw new Error("Failed to change profile picture");
+                }
+            }
     
             onClose();
         } catch (error) {
@@ -128,7 +148,7 @@ export function EditProfile({ onClose }) {
                     
                     <img 
                         className="w-24 h-24 rounded-full object-cover border-2 border-gray-500"
-                        src={selectedImage} 
+                        src={imagePreview} 
                         alt="Profile"
                     />
                     <button 

@@ -41,6 +41,7 @@ export default function Profile() {
         const data = await response.json();
         setUserData(data);
         console.log(data)
+        console.log(data.userInfo.userName);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -58,7 +59,7 @@ export default function Profile() {
           {/*profile picture*/}
           <img 
             className="w-32 h-32 rounded-full object-cover"
-            src={userData?.userInfo?.profilePicture || "https://www.gravatar.com/avatar/?d=mp"}
+            src={userData?.userInfo?.profilePic}
             alt="profile-picture"
           />
 
