@@ -17,7 +17,6 @@ const router = express.Router();
 const upload = multer({dest: 'uploads/'})
 
 router.put('/updateBio', authMiddleware, updateBio); //create to update a bio
-router.put('/updateUser', updateUser); //create the putt for updating a user
 router.put('/getFollowing', authMiddleware, getFollowing); //create the get request to get followers
 router.put('/follow',authMiddleware, follow); //create put for following a user 
 router.put('/unfollow', authMiddleware, unfollow); //create put for unfollowing a user
