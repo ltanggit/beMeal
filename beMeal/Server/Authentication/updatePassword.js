@@ -4,8 +4,9 @@ export const updatePassword = async (req, res) => {
   try {
     const { userID, password } = req.body;
 
-    // Find account by userName
+    // Find account by userID
     const account = await Account.findOne({ '_id': userID });
+
     // if account does not exist, return error
     if (!account) {
       return res.status(400).json({ error: "Account does not exist" });
@@ -35,9 +36,12 @@ export const updatePassword = async (req, res) => {
     }
 
     // Update password
-    account.password = password;
-    await account.save();
-    res.status(200).json({ message: "Password updated" });
+    const passWord = await account.findOneAndUpdate({'id_': userID}, { $set: {'password': password} }, {new : true});
+    console.log('account password saved');
+
+    if(!passWord){
+      return res.status(404).json( {error : "error updating password in account" });
+    }
 
 } catch (error) {
     console.error("Error updating password:", error);

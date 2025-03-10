@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function SignUp() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -17,36 +19,35 @@ export default function SignUp() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userName: username, // Changed from userID to userName
+          userName: username,
           password: password,
         }),
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || "Registration failed");
       }
 
-      // Auto-login after successful registration
       const loginResponse = await fetch("http://localhost:5050/accounts/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userName: username, // Changed from userID to userName
+          userName: username,
           password: password,
         }),
       });
 
       const loginData = await loginResponse.json();
-      
+
       if (!loginResponse.ok) {
         throw new Error(loginData.error || "Login failed after registration");
       }
 
-      localStorage.setItem("token", loginData.token);
+      login(loginData.token);
       navigate("/feed");
     } catch (error) {
       setError(error.message);

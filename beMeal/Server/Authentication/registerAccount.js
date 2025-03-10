@@ -1,5 +1,7 @@
 import Account from "./accountSchema.js";
 import User from "../Users/userSchema.js"; // Import user schema to link accounts
+import cloudinary from "../cloudinaryUsers.js"; //import the cloudinary api to use
+import path from 'path';
 
 export const registerAccount = async (req, res) => {
   try {
@@ -51,7 +53,29 @@ export const registerAccount = async (req, res) => {
     });
     await newUser.save();
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+// Get the absolute path of the current directory (where registerAccount.js is)
+const imagePath = path.join(__dirname, 'defaultImage.png');
+
+    //when creating the account you also upload them a default image to be shown when they log in, and give them their image URL
+    const uploadImage = await cloudinary.uploader.upload(imagePath, {folder: 'profile_pictures', //put into profile_pictures folder
+            width: 300, // Resize image can mess with later
+            height: 300,
+            crop: 'fill', // Crop to fit dimensions
+            gravity: 'face', // Center on face if possible
+            quality: 'auto',
+            fetch_format: 'auto',
+            public_id: createdAccount._id.toString()});
+    console.log('uploaded default image');
+    
+console.log('Upload response:', uploadImage); // Log the upload response
+console.log('Uploaded image folder:', uploadImage.folder); // Check folder path returned in response
+
+    //update the userImage url the correct url
+    await User.findOneAndUpdate({'userID': createdAccount._id}, { $set: {profilePic: uploadImage.secure_url } });
+
     res.status(201).json({ message: "Account created successfully" });
+
     
   } catch (error) {
     console.error("Error registering account:", error);
