@@ -1,6 +1,7 @@
 // postRoutes.js
 import express from "express";
 import Post from "../Posts/postSchema.js";
+import User from "../Users/userSchema.js"
 import { authMiddleware } from "../Authentication/middleware.js";
 
 const postRoutes = express.Router();
@@ -13,22 +14,28 @@ const postRoutes = express.Router();
  *    caption: String
  * }
  */
+
+//when making a new post, update the lastposted for the user who posted.
 postRoutes.post("/createPost", async (req, res) => {
   try {
-    const { username, image, captionParsed } = req.body;
-    if (!username || !image) {
+    const { userID, image, caption } = req.body;
+    if (!userID || !image) {
       return res.status(400).json({ error: "all fields are required" });
     }
 
-    let caption = "";
-    if (captionParsed) {
-      caption = captionParsed;
+    const user = await User.findOne({ userID: userID });
+
+    if (!user) {
+      return res.status(400).json({ error: "user does not exist" });
     }
 
+    // console.log(caption);
+
     const newPost = new Post({
-      username,
+        userID,
+        username: user.userName,
       image,
-      caption,
+      caption: caption || "",
 
       //timePosted will use Date.now as default
       timePosted: new Date(),
@@ -42,6 +49,9 @@ postRoutes.post("/createPost", async (req, res) => {
   }
 });
 
+
+//change allPosts to getFeed
+
 postRoutes.get("/allPosts", authMiddleware, async (req, res) => {
   try {
     const posts = await Post.find({}).sort({ timePosted: -1 });
@@ -49,6 +59,39 @@ postRoutes.get("/allPosts", authMiddleware, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "error getting all posts" });
+  }
+});
+
+postRoutes.get("/getFeed/:userID", async (req, res) => {
+  try {
+    const { userID } = req.params;
+    const user = await User.findOne({ userID }).select("following");
+
+    if (!user) {
+      return res.status(404).json({ error: "user not found" });
+    }
+
+    if (!user.following || user.following.length === 0) {
+      return res.status(404).json({ error: "user not following others" });
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const postsFeed = await Post.find({
+      userID: { $in: user.following },
+      timePosted: { $gte: today },
+    }).sort({ timePosted: -1 })
+    .populate({
+      path: "userID",
+      model: "userprofiles",
+      select: "userName",
+    });
+
+    res.status(200).json(postsFeed);
+  } catch (error){
+    console.error(error);
+    res.status(500).json({ error: "error getting feed" });
   }
 });
 
