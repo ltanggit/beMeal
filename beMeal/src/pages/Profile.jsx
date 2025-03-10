@@ -8,6 +8,7 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [refresh, setRefresh] = useState(false);
   const { user } = useAuth();
 
   const handleEditClick = () => {
@@ -15,40 +16,49 @@ export default function Profile() {
     setTimeout(() => setIsAnimating(true), 10);
   }
 
-  const handleCloseClick = () => {
-    setIsAnimating(false);
-    setTimeout(() => setIsEditing(false), 300);
-  }
-
-  useEffect(() => {
+  const fetchUserData = async () => {
     if (!user) return;
 
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(`http://localhost:5050/users/getUser`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${user.token}`,
-          },
-          body: JSON.stringify({ userID: user.userID }),
-        });
+    try {
+      const response = await fetch(`http://localhost:5050/users/getUser`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ userID: user.userID }),
+      });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-
-        const data = await response.json();
-        setUserData(data);
-        console.log(data)
-        console.log(data.userInfo.userName);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
       }
-    };
 
+      const data = await response.json();
+      setUserData(data);
+      console.log(data)
+      console.log(data.userInfo.userName);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  // update when user changes 
+  useEffect(() => {
     fetchUserData();
   }, [user]);
+  
+  // update when refresh changes
+  useEffect(() => {
+    fetchUserData();
+  }, [refresh]);
+
+  const handleCloseClick = () => {
+    setIsAnimating(false);
+    setTimeout(() => {
+      setIsEditing(false);
+      setRefresh(prev => !prev);
+    }, 300);
+  }
 
   return (
     <>
