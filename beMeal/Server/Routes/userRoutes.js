@@ -6,6 +6,8 @@ import { follow } from '../Users/updateFollowing.js';
 import { unfollow } from '../Users/updateFollowing.js';
 import { getUser } from '../Users/getUser.js';
 import { searchUsers } from '../Users/searchUsers.js';
+import { getStreak } from '../Users/getStreak.js';
+import { updateStreak } from '../Users/updateStreak.js';
 import { authMiddleware } from "../Authentication/middleware.js";
 import { uploadProfilePic } from '../Users/uploadProfilePic.js';
 
@@ -21,5 +23,7 @@ router.put('/unfollow', authMiddleware, unfollow); //create put for unfollowing 
 router.post('/getUser', authMiddleware, getUser); //create get to get users information
 router.put('/searchUsers', authMiddleware, searchUsers); //create get to ge all the matching userNames
 router.put('/uploadProfilePic', authMiddleware, upload.single('file'), uploadProfilePic); //upload profile pie
+router.get('/getStreak', getStreak); //create get to get the streak count
+router.put('/updateStreak', updateStreak); //create put to update the streak count
 
 export default router;

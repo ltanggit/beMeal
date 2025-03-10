@@ -3,9 +3,24 @@ import express from "express";
 import Post from "../Posts/postSchema.js";
 import User from "../Users/userSchema.js";
 import { authMiddleware } from "../Authentication/middleware.js";
+import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../cloudinaryPosts.js";
+
+//set up upload to cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "postImages",
+    allowed_formats: ["jpeg", "jpg", "png"],
+  },
+});
+
+const upload = multer({ storage: storage });
 
 const postRoutes = express.Router();
 
+//outdated
 /**
  * req body:
  * {
@@ -16,10 +31,10 @@ const postRoutes = express.Router();
  */
 
 //when making a new post, update the lastposted for the user who posted.
-postRoutes.post("/createPost", async (req, res) => {
+postRoutes.post("/createPost", upload.single("image"), async (req, res) => {
   try {
-    const { userID, image, caption } = req.body;
-    if (!userID || !image) {
+    const { userID, caption } = req.body;
+    if (!userID || !req.file) {
       return res.status(400).json({ error: "all fields are required" });
     }
 
@@ -28,13 +43,16 @@ postRoutes.post("/createPost", async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: "user does not exist" });
     }
+    // console.log("Uploaded file details:", req.file);
+
+    const imagePath = req.file.path;
 
     // console.log(caption);
 
     const newPost = new Post({
       userID,
       username: user.userName,
-      image,
+      image: imagePath,
       caption: caption || "",
 
       //timePosted will use Date.now as default
@@ -132,6 +150,25 @@ postRoutes.put("/incLikes/:_postId", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "error updating likes" });
+  }
+});
+
+postRoutes.put("/decLikes/:_postId", async (req, res) => {
+  try {
+    const postId = req.params._postId;
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "post not found" });
+    }
+
+    post.likeCount -= 1;
+    const result = await post.save();
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "error decrementing like" });
   }
 });
 
