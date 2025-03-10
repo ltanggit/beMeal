@@ -153,6 +153,25 @@ postRoutes.put("/incLikes/:_postId", async (req, res) => {
   }
 });
 
+postRoutes.put("/decLikes/:_postId", async (req, res) => {
+  try {
+    const postId = req.params._postId;
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "post not found" });
+    }
+
+    post.likeCount -= 1;
+    const result = await post.save();
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "error decrementing like" });
+  }
+});
+
 postRoutes.get("/getPost/:_postId", async (req, res) => {
   try {
     const postId = req.params._postId;
