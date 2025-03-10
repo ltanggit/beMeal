@@ -67,6 +67,9 @@ const imagePath = path.join(__dirname, 'defaultImage.png');
             fetch_format: 'auto',
             public_id: createdAccount._id.toString()});
     console.log('uploaded default image');
+    
+console.log('Upload response:', uploadImage); // Log the upload response
+console.log('Uploaded image folder:', uploadImage.folder); // Check folder path returned in response
 
     //update the userImage url the correct url
     await User.findOneAndUpdate({'userID': createdAccount._id}, { $set: {profilePic: uploadImage.secure_url } });

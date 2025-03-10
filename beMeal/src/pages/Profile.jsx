@@ -41,6 +41,7 @@ export default function Profile() {
         const data = await response.json();
         setUserData(data);
         console.log(data)
+        console.log(data.userInfo.userName);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
