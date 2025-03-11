@@ -27,8 +27,8 @@ export function EditProfile({ onClose }) {
                     userID: user.userID,
                 }),
             });
-            const userData = await userProfile.json(); //parse the json response  
-            console.log(userData);  // Log the full response to see its structure
+            const userData = await userProfile.json(); // parse the json response  
+            console.log(userData);  // log the full response to see its structure
             setImagePreview(userData.userInfo.profilePic);  // Assuming 'profilePic' is inside the returned object
             setUsername(userData.userInfo.userName);  
             setPassword(userData.userInfo.password);
@@ -103,32 +103,36 @@ export function EditProfile({ onClose }) {
                 });
     
                 const usernameResult = await usernameResponse.json();
-                console.log(username);
+                console.log(usernameResult);
     
                 if (!usernameResponse.ok) {
                     throw new Error("Failed to change username");
                 }
             }
 
-            // if (password) {
-            //     const passwordResponse = await fetch(`http://localhost:5050/accounts/updatePassword`, {
-            //         method: "PUT",
-            //         headers: {
-            //             "Content-Type": "application/json",
-            //             "Authorization": `Bearer ${user.token}`,
-            //         },
-            //         body: JSON.stringify({
-            //             userID: user.userID,
-            //             password: password,
-            //         }),
-            //     });
-    
-            //     const passwordResult = await passwordResponse.json();
-    
-            //     if (!passwordResponse.ok) {
-            //         throw new Error("Failed to change password");
-            //     }
-            // }
+            if (passwordChange) {
+                const passwordResponse = await fetch(`http://localhost:5050/accounts/updatePassword`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${user.token}`,
+                    },
+                    body: JSON.stringify({
+                        userID: user.userID,
+                        password: password,
+                    }),
+                });
+                
+                console.log("test password is: ");
+                console.log(password);
+                const passwordResult = await passwordResponse.json();
+                
+                console.log(passwordResult); 
+
+                if (!passwordResponse.ok) {
+                    throw new Error("Failed to change password");
+                }
+            }
     
             if (profilePicChange) {
                 const form = new FormData()
@@ -201,6 +205,7 @@ export function EditProfile({ onClose }) {
                         value={password}
                         onChange={handleProfileChange}
                         />
+                        
                         <br/>
                     </div>
                     <div className="flex flex-col">
