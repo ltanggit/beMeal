@@ -38,7 +38,6 @@ export const updatePassword = async (req, res) => {
     // Update password
     account.password = password;
     await account.save();
-    console.log("Password" + password + "updated for account" + account._id);
     res.status(200).json({ message: "Password updated" });
 
 } catch (error) {

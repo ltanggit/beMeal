@@ -110,25 +110,25 @@ export function EditProfile({ onClose }) {
                 }
             }
 
-            // if (password) {
-            //     const passwordResponse = await fetch(`http://localhost:5050/accounts/updatePassword`, {
-            //         method: "PUT",
-            //         headers: {
-            //             "Content-Type": "application/json",
-            //             "Authorization": `Bearer ${user.token}`,
-            //         },
-            //         body: JSON.stringify({
-            //             userID: user.userID,
-            //             password: password,
-            //         }),
-            //     });
+            if (password) {
+                const passwordResponse = await fetch(`http://localhost:5050/accounts/updatePassword`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${user.token}`,
+                    },
+                    body: JSON.stringify({
+                        userID: user.userID,
+                        password: password,
+                    }),
+                });
     
-            //     const passwordResult = await passwordResponse.json();
+                const passwordResult = await passwordResponse.json();
     
-            //     if (!passwordResponse.ok) {
-            //         throw new Error("Failed to change password");
-            //     }
-            // }
+                if (!passwordResponse.ok) {
+                    throw new Error("Failed to change password");
+                }
+            }
     
             if (profilePicChange) {
                 const form = new FormData()
