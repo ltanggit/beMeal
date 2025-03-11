@@ -2,17 +2,20 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 
 export function EditProfile({ onClose }) {
+    const { user } = useAuth();
+
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [bio, setBio] = useState("");
-    const { user } = useAuth();
 
     const [usernameChange, setUsernameChange] = useState(false);
     const [bioChange, setBioChange] = useState(false);
     const [passwordChange, setPasswordChange] = useState(false);
     const [profilePicChange, setProfilePicChange] = useState(false);
+
+    const [error, setError] = useState("");
 
     useEffect(() => {
         if (user) {
@@ -27,9 +30,8 @@ export function EditProfile({ onClose }) {
                     userID: user.userID,
                 }),
             });
-            const userData = await userProfile.json(); //parse the json response  
-            console.log(userData);  // Log the full response to see its structure
-            setImagePreview(userData.userInfo.profilePic);  // Assuming 'profilePic' is inside the returned object
+            const userData = await userProfile.json(); 
+            setImagePreview(userData.userInfo.profilePic);  
             setUsername(userData.userInfo.userName);  
             setPassword(userData.userInfo.password);
             setBio(userData.userInfo.bio);    
@@ -38,7 +40,7 @@ export function EditProfile({ onClose }) {
     }
     }, [user]);
 
-
+// don't call the apis when nothing has changed 
     const handleProfileChange = (e) => {
         const { name, value, files } = e.target;
         
@@ -52,7 +54,7 @@ export function EditProfile({ onClose }) {
         }
         if (name === "password") {
             setPassword(value);
-            setPasswordChange(true);  
+            setPasswordChange(value.trim().length > 0);  
         }
         
         if (files) {
@@ -82,8 +84,6 @@ export function EditProfile({ onClose }) {
                     }),
                 });
         
-                const bioResult = await bioResponse.json();
-        
                 if (!bioResponse.ok) {
                     throw new Error("Failed to change user bio");
                 }
@@ -101,16 +101,15 @@ export function EditProfile({ onClose }) {
                         userName: username,
                     }),
                 });
-    
-                const usernameResult = await usernameResponse.json();
-                console.log(username);
+
+                const usernameData = await usernameResponse.json();
     
                 if (!usernameResponse.ok) {
-                    throw new Error("Failed to change username");
+                    throw new Error(usernameData.error);
                 }
             }
 
-            if (password) {
+            if (passwordChange) {
                 const passwordResponse = await fetch(`http://localhost:5050/accounts/updatePassword`, {
                     method: "PUT",
                     headers: {
@@ -122,11 +121,11 @@ export function EditProfile({ onClose }) {
                         password: password,
                     }),
                 });
-    
-                const passwordResult = await passwordResponse.json();
-    
+
+                const passwordData = await passwordResponse.json();
+
                 if (!passwordResponse.ok) {
-                    throw new Error("Failed to change password");
+                    throw new Error(passwordData.error);
                 }
             }
     
@@ -141,8 +140,6 @@ export function EditProfile({ onClose }) {
                     },
                     body: form,
                 });
-                
-                const picResult = await picResponse.json();
     
                 if (!picResponse.ok) {
                     throw new Error("Failed to change profile picture");
@@ -152,6 +149,7 @@ export function EditProfile({ onClose }) {
             onClose();
         } catch (error) {
             console.error("Error:", error);
+            setError(error.message);
         }
     };
     
@@ -179,11 +177,13 @@ export function EditProfile({ onClose }) {
                         Change Profile Picture
                     </button>
                     {selectedImage && <p className="text-[#4CAF50] text-sm">Profile Picture Updated!</p>}
+                    {error && <p className="text-red-500 mb-4">{error}</p>}
                 </div>
 
                 {/*Inputs*/}
                 <div className="flex flex-col items-center mt-4" >
                     <div className="flex flex-col">
+                          
                          <label>New Username: </label>
                         <input
                             className="bg-[#333] text-white border border-gray-600 rounded-lg"
@@ -201,6 +201,7 @@ export function EditProfile({ onClose }) {
                         value={password}
                         onChange={handleProfileChange}
                         />
+                        
                         <br/>
                     </div>
                     <div className="flex flex-col">

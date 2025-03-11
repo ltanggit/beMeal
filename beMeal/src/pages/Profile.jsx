@@ -56,7 +56,6 @@ export default function Profile() {
 
       const posts = await response.json();
       setUserPosts(posts);
-      console.log("test hai hai");
       console.log(posts);
     } catch (error) {
       console.error("Error fetching user's posts:", error);
