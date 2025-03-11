@@ -17,6 +17,10 @@ export const updateUserName = async (req, res) => {
     if (account.userName === newUserName) {
       return res.status(400).json({ error: "New username must be different" });
     }
+    // Check if userName is valid
+    if (newUserName.length < 3) {
+      return res.status(400).json({ error: "User ID must be at least 3 characters" });
+    }
     const accountExists = await Account.findOne({ 'userName': newUserName });
     if (accountExists) {
       return res.status(400).json({ error: "Username already taken" });
