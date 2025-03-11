@@ -2,17 +2,20 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 
 export function EditProfile({ onClose }) {
+    const { user } = useAuth();
+
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [bio, setBio] = useState("");
-    const { user } = useAuth();
 
     const [usernameChange, setUsernameChange] = useState(false);
     const [bioChange, setBioChange] = useState(false);
     const [passwordChange, setPasswordChange] = useState(false);
     const [profilePicChange, setProfilePicChange] = useState(false);
+
+    const [error, setError] = useState("");
 
     useEffect(() => {
         if (user) {
@@ -27,9 +30,8 @@ export function EditProfile({ onClose }) {
                     userID: user.userID,
                 }),
             });
-            const userData = await userProfile.json(); // parse the json response  
-            console.log(userData);  // log the full response to see its structure
-            setImagePreview(userData.userInfo.profilePic);  // Assuming 'profilePic' is inside the returned object
+            const userData = await userProfile.json(); 
+            setImagePreview(userData.userInfo.profilePic);  
             setUsername(userData.userInfo.userName);  
             setPassword(userData.userInfo.password);
             setBio(userData.userInfo.bio);    
@@ -38,7 +40,7 @@ export function EditProfile({ onClose }) {
     }
     }, [user]);
 
-
+// don't call the apis when nothing has changed 
     const handleProfileChange = (e) => {
         const { name, value, files } = e.target;
         
@@ -82,8 +84,6 @@ export function EditProfile({ onClose }) {
                     }),
                 });
         
-                const bioResult = await bioResponse.json();
-        
                 if (!bioResponse.ok) {
                     throw new Error("Failed to change user bio");
                 }
@@ -102,9 +102,6 @@ export function EditProfile({ onClose }) {
                     }),
                 });
     
-                const usernameResult = await usernameResponse.json();
-                console.log(usernameResult);
-    
                 if (!usernameResponse.ok) {
                     throw new Error("Failed to change username");
                 }
@@ -122,12 +119,6 @@ export function EditProfile({ onClose }) {
                         password: password,
                     }),
                 });
-                
-                console.log("test password is: ");
-                console.log(password);
-                const passwordResult = await passwordResponse.json();
-                
-                console.log(passwordResult); 
 
                 if (!passwordResponse.ok) {
                     throw new Error("Failed to change password");
@@ -145,8 +136,6 @@ export function EditProfile({ onClose }) {
                     },
                     body: form,
                 });
-                
-                const picResult = await picResponse.json();
     
                 if (!picResponse.ok) {
                     throw new Error("Failed to change profile picture");
@@ -156,6 +145,7 @@ export function EditProfile({ onClose }) {
             onClose();
         } catch (error) {
             console.error("Error:", error);
+            setError(error.message);
         }
     };
     
@@ -188,6 +178,7 @@ export function EditProfile({ onClose }) {
                 {/*Inputs*/}
                 <div className="flex flex-col items-center mt-4" >
                     <div className="flex flex-col">
+                          {error && <p className="text-red-500 mb-4">{error}</p>}
                          <label>New Username: </label>
                         <input
                             className="bg-[#333] text-white border border-gray-600 rounded-lg"
