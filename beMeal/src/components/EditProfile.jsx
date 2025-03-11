@@ -54,7 +54,7 @@ export function EditProfile({ onClose }) {
         }
         if (name === "password") {
             setPassword(value);
-            setPasswordChange(true);  
+            setPasswordChange(value.trim().length > 0);  
         }
         
         if (files) {
@@ -101,9 +101,11 @@ export function EditProfile({ onClose }) {
                         userName: username,
                     }),
                 });
+
+                const usernameData = await usernameResponse.json();
     
                 if (!usernameResponse.ok) {
-                    throw new Error("Failed to change username");
+                    throw new Error(usernameData.error);
                 }
             }
 
@@ -120,8 +122,10 @@ export function EditProfile({ onClose }) {
                     }),
                 });
 
+                const passwordData = await passwordResponse.json();
+
                 if (!passwordResponse.ok) {
-                    throw new Error("Failed to change password");
+                    throw new Error(passwordData.error);
                 }
             }
     
@@ -173,12 +177,13 @@ export function EditProfile({ onClose }) {
                         Change Profile Picture
                     </button>
                     {selectedImage && <p className="text-[#4CAF50] text-sm">Profile Picture Updated!</p>}
+                    {error && <p className="text-red-500 mb-4">{error}</p>}
                 </div>
 
                 {/*Inputs*/}
                 <div className="flex flex-col items-center mt-4" >
                     <div className="flex flex-col">
-                          {error && <p className="text-red-500 mb-4">{error}</p>}
+                          
                          <label>New Username: </label>
                         <input
                             className="bg-[#333] text-white border border-gray-600 rounded-lg"
