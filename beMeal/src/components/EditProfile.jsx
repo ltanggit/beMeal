@@ -4,23 +4,31 @@ import { useAuth } from "../context/AuthContext";
 export function EditProfile({ onClose }) {
     const { user } = useAuth();
 
+    const [profileData, setProfileData] = useState({
+        username: "",
+        password: "",
+        bio: "",
+        profilePic: null
+    });
+
+    const [originalData, setOriginalData] = useState({
+        username: "",
+        bio: "",
+    });
+
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [bio, setBio] = useState("");
-
-    const [usernameChange, setUsernameChange] = useState(false);
-    const [bioChange, setBioChange] = useState(false);
-    const [passwordChange, setPasswordChange] = useState(false);
-    const [profilePicChange, setProfilePicChange] = useState(false);
-
     const [error, setError] = useState("");
 
     useEffect(() => {
         if (user) {
-            const fetchUserData = async () => {
-                const userProfile = await fetch(`http://localhost:5050/users/getUser`, {
+            fetchUserData();
+        }
+    }, [user]);
+
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`http://localhost:5050/users/getUser`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -30,48 +38,55 @@ export function EditProfile({ onClose }) {
                     userID: user.userID,
                 }),
             });
-            const userData = await userProfile.json(); 
-            setImagePreview(userData.userInfo.profilePic);  
-            setUsername(userData.userInfo.userName);  
-            setPassword(userData.userInfo.password);
-            setBio(userData.userInfo.bio);    
-        }
-        fetchUserData();
-    }
-    }, [user]);
-
-// don't call the apis when nothing has changed 
-    const handleProfileChange = (e) => {
-        const { name, value, files } = e.target;
-        
-        if (name === "username") {
-            setUsername(value);
-            setUsernameChange(true);  
-        }
-        if (name === "bio") {
-            setBio(value);
-            setBioChange(true); 
-        }
-        if (name === "password") {
-            setPassword(value);
-            setPasswordChange(value.trim().length > 0);  
-        }
-        
-        if (files) {
-            const file = files[0];
-            if (file) {
-                setSelectedImage(file);
-                const imageURL = URL.createObjectURL(file);
-                setImagePreview(imageURL);
-                setProfilePicChange(true);  
+            
+            if (!response.ok) {
+                throw new Error("Failed to fetch user data");
             }
+            
+            const userData = await response.json();
+            console.log(userData);
+            
+            // set current values
+            setProfileData({
+                username: userData.userInfo.userName,
+                password: "",  // Don't show actual password
+                bio: userData.userInfo.bio,
+                profilePic: userData.userInfo.profilePic
+            });
+            
+            // set original values for change detection
+            setOriginalData({
+                username: userData.userInfo.userName,
+                bio: userData.userInfo.bio,
+            });
+            
+            setImagePreview(userData.userInfo.profilePic);
+        } catch (err) {
+            console.error("Error fetching user data:", err);
+            setError("Failed to load profile data");
         }
-    }
-    
+    };
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setProfileData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedImage(file);
+            const imageURL = URL.createObjectURL(file);
+            setImagePreview(imageURL);
+        }
+    };
+        
     const handleSaveClick = async () => {
         try {
-            if (bioChange) {
+            if (profileData.bio !== originalData.bio) {
                 const bioResponse = await fetch(`http://localhost:5050/users/updateBio`, {
                     method: "PUT",
                     headers: {
@@ -80,7 +95,7 @@ export function EditProfile({ onClose }) {
                     },
                     body: JSON.stringify({
                         userID: user.userID,
-                        bio: bio,
+                        bio: profileData.bio,
                     }),
                 });
         
@@ -89,7 +104,7 @@ export function EditProfile({ onClose }) {
                 }
             }
     
-            if (usernameChange) {
+            if (profileData.username !== originalData.username && profileData.username.trim() !== '') {
                 const usernameResponse = await fetch(`http://localhost:5050/accounts/updateUserName`, {
                     method: "PUT",
                     headers: {
@@ -98,7 +113,7 @@ export function EditProfile({ onClose }) {
                     },
                     body: JSON.stringify({
                         userID: user.userID,
-                        userName: username,
+                        userName: profileData.username,
                     }),
                 });
 
@@ -109,7 +124,7 @@ export function EditProfile({ onClose }) {
                 }
             }
 
-            if (passwordChange) {
+            if (profileData.password.trim() !== '') {
                 const passwordResponse = await fetch(`http://localhost:5050/accounts/updatePassword`, {
                     method: "PUT",
                     headers: {
@@ -118,7 +133,7 @@ export function EditProfile({ onClose }) {
                     },
                     body: JSON.stringify({
                         userID: user.userID,
-                        password: password,
+                        password: profileData.password,
                     }),
                 });
 
@@ -129,7 +144,7 @@ export function EditProfile({ onClose }) {
                 }
             }
     
-            if (profilePicChange) {
+            if (selectedImage) {
                 const form = new FormData()
                 form.append('file', selectedImage);
                 form.append('userID', user.userID)
@@ -163,7 +178,7 @@ export function EditProfile({ onClose }) {
                     <input
                         type="file"
                         id="fileInput"
-                        onChange={handleProfileChange} 
+                        onChange={handleFileChange} 
                     />
                     
                     <img 
@@ -188,8 +203,8 @@ export function EditProfile({ onClose }) {
                         <input
                             className="bg-[#333] text-white border border-gray-600 rounded-lg"
                             name="username"
-                            value={username}
-                            onChange={handleProfileChange}
+                            value={profileData.username}
+                            onChange={handleInputChange}
                         />
                         <br/>
                     </div>
@@ -198,8 +213,8 @@ export function EditProfile({ onClose }) {
                         <input
                         className="bg-[#333] text-white border border-gray-600 rounded-lg"
                         name="password"
-                        value={password}
-                        onChange={handleProfileChange}
+                        value={profileData.password}
+                        onChange={handleInputChange}
                         />
                         
                         <br/>
@@ -209,8 +224,8 @@ export function EditProfile({ onClose }) {
                         <textarea
                             className="bg-[#333] text-white border border-gray-600 rounded-lg"
                             name="bio"
-                            value={bio}
-                            onChange={handleProfileChange}
+                            value={profileData.bio}
+                            onChange={handleInputChange}
                         />  
                     </div> 
                 </div>
@@ -223,6 +238,7 @@ export function EditProfile({ onClose }) {
                     <button
                      className="bg-white text-black hover:bg-gray-300 rounded-lg w-[9vw]"
                      onClick={handleSaveClick}>
+                        
                      Save
                     </button>
                 </div>

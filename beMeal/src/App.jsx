@@ -25,9 +25,7 @@ export default function App() {
           <Route
             path="/upload"
             element={
-              <PrivateRoute>
                 <Upload />
-              </PrivateRoute>
             }
           />
           <Route path="/profile" element={
