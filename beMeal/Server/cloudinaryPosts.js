@@ -11,5 +11,3 @@ cloudinary.config({
 });
 
 export default cloudinary;
-
-//ask about the two cloudinary files
