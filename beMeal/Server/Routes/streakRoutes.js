@@ -1,5 +1,4 @@
 import express from 'express';
-// import StreakWindow, { generateStreakWindow } from './streakWindow.js';
 import { generateStreakWindow } from '../StreakWindow/generateStreakWindow.js';
 import { getStreakWindow } from '../StreakWindow/getStreakWindow.js';
 import { getTimeLeft } from '../StreakWindow/getTimeLeft.js';
