@@ -4,23 +4,12 @@ import Post from "../Posts/postSchema.js";
 import User from "../Users/userSchema.js";
 import { authMiddleware } from "../Authentication/middleware.js";
 import multer from "multer";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../cloudinaryPosts.js";
 
-//set up upload to cloudinary
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "postImages",
-    allowed_formats: ["jpeg", "jpg", "png"],
-  },
-});
-
-const upload = multer({ storage: storage });
+const upload = multer({ dest: "uploads/" });
 
 const postRoutes = express.Router();
 
-//outdated
 /**
  * req body:
  * {
@@ -48,14 +37,19 @@ postRoutes.post(
       }
       // console.log("Uploaded file details:", req.file);
 
-      const imagePath = req.file.path;
+      const cloudinaryUpload = await cloudinary.uploader.upload(req.file.path, {
+        folder: "postImages",
+        allowed_formats: ["jpeg", "jpg", "png"],
+      });
 
-      // console.log(caption);
+      if (!cloudinaryUpload.secure_url) {
+        return res.status(500).json({ error: "Cloudinary upload failed" });
+      }
 
       const newPost = new Post({
         userID,
         username: user.userName,
-        image: imagePath,
+        image: cloudinaryUpload.secure_url,
         caption: caption || "",
 
         //timePosted will use Date.now as default
