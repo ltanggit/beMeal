@@ -17,11 +17,13 @@ Frontend Developers: Lillian Gonick, Max Lee
 Inspired by the spontaneity and authenticity of social media applications like BeReal, Beli, and Instagram, “BeMEAL” is a website application designed to bring young adults together through a shared love of food. BeMeal allows users to capture and share their meals in real time, encouraging a genuine and unfiltered view of what people are eating around the world. The app prompts users to take a photo of whatever meal they’re eating at that moment for two hour-long periods during mealtimes throughout the day which then appears on their friends’ feed. BeMeal also encourages community by enabling users to interact with others on the platform through the use of features such as following friends as well as scrolling through their friends' posts. Whether it’s a home-cooked dish, a restaurant meal, or a quick snack, the goal is to connect people through the universal experience of food while celebrating diversity in culinary habits.
 
 ## Special Project Features
-1. Users can upload public photos of their food throughout the day in real time. (Other users can see their posts)
-2. Users can update their personal information, including Username, Password, Bio, and Profile Picture.
-3. Users can accumulate a "streak" if they continuously post during a designated time window every day.
-4. Users can follow and unfollow other users, expanding their network and connections across the platform.
-5. Users will be automatically logged out of their accounts after 1 hour for additional security.
+1. Users can upload posts with photos and captions of their food throughout the day in real time.
+2. Users can follow and unfollow other users, expanding their network and connections across the platform.
+3. Users will only see posts made by other users they follow.
+4. Users can update their personal information, including Username, Password, Bio, and Profile Picture, at any time.
+5. Users can accumulate a "streak" if they continuously post during a designated time window every day, which will reset if they miss a window.
+6. Users will be automatically logged out of their accounts after 1 hour for additional security.
+7. Users are required to create strong passwords for additional security.
 
 ## Additional Project Requirements
 - ✔ App can display dynamic data to the user.
@@ -43,7 +45,7 @@ Inspired by the spontaneity and authenticity of social media applications like B
     ```Bash
     cd bemeal
     ```
-4. *Ensure you have node.js downloaded on your local machine and install the correct dependencies:
+4. Ensure you have node.js downloaded on your local machine and install the correct dependencies**:
     ```Bash
     npm install
     ```
@@ -68,7 +70,7 @@ Inspired by the spontaneity and authenticity of social media applications like B
 10. Have fun!
 
 
-**Additional Notes:**
+****Additional Notes:**
 
 If you run into installation errors on **STEP 4**, you may have to run the following commands: 
 - **"Cloudinary"-related** Errors:
@@ -89,12 +91,12 @@ If you run into installation errors on **STEP 4**, you may have to run the follo
     npm install
     ```
 
-## Credits
+## Credits/Resources/References/Inspo
 - [BeReal](https://bereal.com/)
 - [MongoDB Documentation](https://mongoosejs.com/docs/)
 - [Cloudinary Documentation](https://cloudinary.com/documentation/programmable_media_overview)
 - [Getting Started With Vite](https://vite.dev/guide/)
-- [Stack Flow](https://stackoverflow.com/questions)
+- [Stack Overflow](https://stackoverflow.com/questions)
 - Eggert, Paul. Computer Science 35L Winter 2025 Lectures.
 
 
