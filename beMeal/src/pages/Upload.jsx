@@ -10,6 +10,7 @@ const [caption, setCaption] = useState("");
 const [uploading, setUploading] = useState(false);
 const [username, setUsername] = useState("");
 const [error, setError] = useState("");
+const [timer, setTimer] = useState(0);
 
 const handleFileChange = (event) => {
   const file = event.target.files[0];
@@ -82,9 +83,11 @@ const handleUpload = async () => {
     }
 
     const postData = await uploadResponse.json();
+
     alert("Post uploaded successfully!");
     setSelectedFile(null);
     setCaption("");
+
   } catch (error) {
     console.error("Error uploading post:", error);
     alert("Error uploading post. Please try again.");
@@ -96,7 +99,10 @@ const handleUpload = async () => {
   return (
     <div className="bg-black min-h-screen w-screen text-white p-4 relative flex flex-col">
       <Header/>
-      <div className="flex flex-grow justify-center items-center">
+      <div className="flex flex-col flex-grow justify-center items-center">
+      <div className="flex justify-center items-center mb-5 bg-yellow-400 text-black rounded-2xl h-[5vh] w-[22vw] shadow-lg border-2 border-yellow-500 animate-bounce">
+        <p className="font-semibold text-lg">⏳ Time Left to Upload: *timecount* ⏳</p>
+      </div>
         <div className='text-gray-400 bg-[#1a1a1a] p-3 rounded-2xl shadow-md w-[50%] h-[70vh]'>
           <div className="flex flex-col justify-center items-center rounded-lg border-2 border-dashed border-gray-400 p-5 w-[100%] h-[100%]">
             <h1 className="text-2xl font-bold text-center text-white mb-20">

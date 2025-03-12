@@ -30,45 +30,53 @@ const postRoutes = express.Router();
  * }
  */
 
-//when making a new post, update the lastposted for the user who posted.
-postRoutes.post("/createPost", upload.single("image"), async (req, res) => {
-  try {
-    const { userID, caption } = req.body;
-    if (!userID || !req.file) {
-      return res.status(400).json({ error: "all fields are required" });
+postRoutes.post(
+  "/createPost",
+  authMiddleware,
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const { userID, caption } = req.body;
+      if (!userID || !req.file) {
+        return res.status(400).json({ error: "all fields are required" });
+      }
+
+      const user = await User.findOne({ userID: userID });
+
+      if (!user) {
+        return res.status(400).json({ error: "user does not exist" });
+      }
+      // console.log("Uploaded file details:", req.file);
+
+      const imagePath = req.file.path;
+
+      // console.log(caption);
+
+      const newPost = new Post({
+        userID,
+        username: user.userName,
+        image: imagePath,
+        caption: caption || "",
+
+        //timePosted will use Date.now as default
+        timePosted: new Date(),
+      });
+
+      const result = await newPost.save();
+
+      //updates lastpostdate for the user when they make post, can change depending on updatestreak
+      user.lastPostDate = new Date();
+
+      user.posts.push(result._id);
+      await user.save();
+
+      res.status(201).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "error creating post" });
     }
-
-    const user = await User.findOne({ userID: userID });
-
-    if (!user) {
-      return res.status(400).json({ error: "user does not exist" });
-    }
-    console.log("Uploaded file details:", req.file);
-
-    const imagePath = req.file.path;
-
-    // console.log(caption);
-
-    const newPost = new Post({
-      userID,
-      username: user.userName,
-      image: imagePath,
-      caption: caption || "",
-
-      //timePosted will use Date.now as default
-      timePosted: new Date(),
-    });
-
-    const result = await newPost.save();
-    user.posts.push(result._id);
-    await user.save();
-
-    res.status(201).json(result);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "error creating post" });
   }
-});
+);
 
 //change allPosts to getFeed
 
@@ -82,7 +90,7 @@ postRoutes.get("/allPosts", authMiddleware, async (req, res) => {
   }
 });
 
-postRoutes.get("/getFeed/:userID", async (req, res) => {
+postRoutes.get("/getFeed/:userID", authMiddleware, async (req, res) => {
   try {
     const { userID } = req.params;
     const user = await User.findOne({ userID }).select("following");
@@ -116,7 +124,7 @@ postRoutes.get("/getFeed/:userID", async (req, res) => {
   }
 });
 
-postRoutes.get("/getUserPosts/:userID", async (req, res) => {
+postRoutes.get("/getUserPosts/:userID", authMiddleware, async (req, res) => {
   try {
     const { userID } = req.params;
     const user = await User.findOne({ userID: userID }).populate({
@@ -134,7 +142,7 @@ postRoutes.get("/getUserPosts/:userID", async (req, res) => {
   }
 });
 
-postRoutes.put("/incLikes/:_postId", async (req, res) => {
+postRoutes.put("/incLikes/:_postId", authMiddleware, async (req, res) => {
   try {
     const postId = req.params._postId;
     const post = await Post.findById(postId);
@@ -153,7 +161,7 @@ postRoutes.put("/incLikes/:_postId", async (req, res) => {
   }
 });
 
-postRoutes.put("/decLikes/:_postId", async (req, res) => {
+postRoutes.put("/decLikes/:_postId", authMiddleware, async (req, res) => {
   try {
     const postId = req.params._postId;
     const post = await Post.findById(postId);
@@ -172,7 +180,7 @@ postRoutes.put("/decLikes/:_postId", async (req, res) => {
   }
 });
 
-postRoutes.get("/getPost/:_postId", async (req, res) => {
+postRoutes.get("/getPost/:_postId", authMiddleware, async (req, res) => {
   try {
     const postId = req.params._postId;
     const post = await Post.findById(postId);
@@ -188,7 +196,7 @@ postRoutes.get("/getPost/:_postId", async (req, res) => {
   }
 });
 
-postRoutes.post("/:postId/addComment", async (req, res) => {
+postRoutes.post("/:postId/addComment", authMiddleware, async (req, res) => {
   try {
     const { postId } = req.params;
     const { username, content } = req.body;
@@ -218,7 +226,7 @@ postRoutes.post("/:postId/addComment", async (req, res) => {
   }
 });
 
-postRoutes.get("/:postId/getComments", async (req, res) => {
+postRoutes.get("/:postId/getComments", authMiddleware, async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
 
