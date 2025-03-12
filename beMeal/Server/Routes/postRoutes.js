@@ -59,7 +59,7 @@ postRoutes.post(
       const result = await newPost.save();
 
       //updates lastpostdate for the user when they make post, can change depending on updatestreak
-      user.lastPostDate = new Date();
+      // user.lastPostDate = new Date();
 
       user.posts.push(result._id);
       await user.save();
