@@ -44,6 +44,7 @@ export function EditProfile({ onClose }) {
             }
             
             const userData = await response.json();
+            console.log(userData);
             
             // set current values
             setProfileData({

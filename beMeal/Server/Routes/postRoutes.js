@@ -43,7 +43,7 @@ postRoutes.post("/createPost", upload.single("image"), async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: "user does not exist" });
     }
-    // console.log("Uploaded file details:", req.file);
+    console.log("Uploaded file details:", req.file);
 
     const imagePath = req.file.path;
 
