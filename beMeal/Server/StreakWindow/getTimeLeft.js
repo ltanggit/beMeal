@@ -25,7 +25,13 @@ export const getTimeLeft = async (req, res) => {
         const minutesLeft = Math.floor((timeLeft % 3600000) / 60000); // Convert remaining milliseconds to minutes
         const secondsLeft = Math.floor((timeLeft % 60000) / 1000); // Convert the remaining milliseconds to seconds
 
-        res.status(200).json({ timeLeft: `${hoursLeft} hours, ${minutesLeft} minutes, ${secondsLeft} seconds` });
+        // Format time to HH:MM:SS
+        const formattedTimeLeft = 
+            `${String(hoursLeft).padStart(2, '0')}:${String(minutesLeft).padStart(2, '0')}:${String(secondsLeft).padStart(2, '0')}`;
+
+        res.status(200).json({ timeLeft: formattedTimeLeft });
+
+        // res.status(200).json({ timeLeft: `${hoursLeft} hours, ${minutesLeft} minutes, ${secondsLeft} seconds` });
 
     } catch (error) {
         console.error('Error fetching time left:', error);
