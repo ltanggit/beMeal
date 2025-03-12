@@ -6,6 +6,8 @@ import userRoutes from "./Routes/userRoutes.js"; //import the routes for the use
 import postRoutes from "./Routes/postRoutes.js";
 import accountRoutes from "./Routes/accountRoutes.js"; //import the routes for the account
 import streakRoutes from "./Routes/streakRoutes.js"; //import the routes for the streak
+import cron from 'node-cron'; // to automate the generation of the streak window
+import { generateStreakWindow } from './StreakWindow/generateStreakWindow.js';
 
 dotenv.config({ path: "../.env" });
 
@@ -40,3 +42,9 @@ connectToDatabase()
   .catch((error) => {
     console.error("Failed to connect to MongoDB:", error);
   });
+
+// Run every day at midnight to create a new streak window
+cron.schedule('0 0 * * *', async () => {
+  console.log('Generating new daily streak window...');
+  await generateStreakWindow();
+});
