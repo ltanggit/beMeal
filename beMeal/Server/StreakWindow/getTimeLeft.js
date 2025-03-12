@@ -22,7 +22,7 @@ export const getTimeLeft = async (req, res) => {
         }
 
         const hoursLeft = Math.floor(timeLeft / 3600000); // Convert milliseconds to hours
-        const minutesLeft = Math.floor(timeLeft / 60000); // Convert milliseconds to minutes
+        const minutesLeft = Math.floor((timeLeft % 3600000) / 60000); // Convert remaining milliseconds to minutes
         const secondsLeft = Math.floor((timeLeft % 60000) / 1000); // Convert the remaining milliseconds to seconds
 
         res.status(200).json({ timeLeft: `${hoursLeft} hours, ${minutesLeft} minutes, ${secondsLeft} seconds` });
