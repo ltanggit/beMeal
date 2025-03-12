@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import userRoutes from "./Routes/userRoutes.js"; //import the routes for the user
 import postRoutes from "./Routes/postRoutes.js";
 import accountRoutes from "./Routes/accountRoutes.js"; //import the routes for the account
+import streakRoutes from "./Routes/streakRoutes.js"; //import the routes for the streak
 
 dotenv.config({ path: "../.env" });
 
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/accounts", accountRoutes);
+app.use("/streak", streakRoutes);
 
 // Connect to MongoDB and start the server
 connectToDatabase()
