@@ -107,8 +107,8 @@ export default function Profile() {
             {/*stats section*/}
             <div className="flex flex-col gap-4 pt-3">
               <div className="flex flex-row gap-4">
-                <p className="pt-2">Followers: {userData?.userInfo?.numFollowers}</p>
-                <p className="pt-2">Following: {userData?.userInfo?.numFollowing}</p>
+                <p className="pt-2">Followers: {userData?.userInfo?.followers.length}</p>
+                <p className="pt-2">Following: {userData?.userInfo?.following.length}</p>
               </div>
               <button
                 className="bg-white text-black hover:bg-gray-200 rounded-lg w-[14vw]"
