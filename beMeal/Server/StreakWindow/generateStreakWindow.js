@@ -16,7 +16,7 @@ export const generateStreakWindow = async (req, res) => {
         await StreakWindow.create({ startTime, endTime });
 
         console.log(`New streak window: ${startTime.toLocaleTimeString()} - ${endTime.toLocaleTimeString()}`);
-        res.status(200).json({ message: 'New streak window generated' });
+        res.status(200).json({ message: 'New streak window generated', startTime: startTime.toLocaleTimeString(), endTime: endTime.toLocaleTimeString()});
 
     } catch (error) {
         console.error('Error generating streak window:', error);

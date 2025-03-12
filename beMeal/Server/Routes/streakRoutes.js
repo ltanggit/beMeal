@@ -1,12 +1,14 @@
 import express from 'express';
 // import StreakWindow, { generateStreakWindow } from './streakWindow.js';
-import { generateStreakWindow } from '../Windows/generateStreakWindow.js';
-import { getStreakWindow } from '../Windows/getStreakWindow.js';
+import { generateStreakWindow } from '../StreakWindow/generateStreakWindow.js';
+import { getStreakWindow } from '../StreakWindow/getStreakWindow.js';
+import { getTimeLeft } from '../StreakWindow/getTimeLeft.js';
 
 const router = express.Router();
 
 // StreakWindow routes
 router.post("/generateStreakWindow", generateStreakWindow);
 router.get("/getStreakWindow", getStreakWindow);
+router.get("/getTimeLeft", getTimeLeft);
 
 export default router;
