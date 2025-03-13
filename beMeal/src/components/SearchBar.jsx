@@ -27,6 +27,7 @@ export default function SearchBar() {
       );
       
       setFollowingList(response.data.following || []);
+      console.log(response.data.following );
     } catch (error) {
       console.error("Error fetching following list:", error);
     }
