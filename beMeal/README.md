@@ -41,10 +41,13 @@ Inspired by the spontaneity and authenticity of social media applications like B
 2. Open a new Terminal Window if you don't already have one open already.
         
         In VSCode: **Ctrl-Shift-`**
-3. Navigate to the correct directory with this command:
+3. Navigate to the correct directory with this command: (may have to run this twice!*)
     ```Bash
     cd bemeal
     ```
+    ***Note: Our project source code is wrapped in a second "bemeal" folder inside the general "bemeal" repository. Please make sure to cd into the second bemeal directory.**
+
+    **i.e. The path should be: bemeal/bemeal/[insert rest of PATH here]**
 4. Ensure you have node.js downloaded on your local machine and install the correct dependencies**:
     ```Bash
     npm install
@@ -60,14 +63,18 @@ Inspired by the spontaneity and authenticity of social media applications like B
 7. Open a new terminal concurrently.
 
         In VSCode: Ctrl-Shift-`
-8. Run the frontend:
+8. (May be optional) Navigate to the correct directory with this command: (see note above for clarification!*)
+    ```Bash
+    cd bemeal
+    ```
+9. Run the frontend:
     ```Bash
     npm run dev
     ```
-9. Open the outputted link on your local browser.
+10. Open the outputted link on your local browser.
 
         In VSCode: Cmd-Click --> http://localhost:5174/
-10. Have fun!
+11. Have fun!
 
 
 ****Additional Notes:**
