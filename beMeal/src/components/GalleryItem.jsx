@@ -8,13 +8,7 @@ export function GalleryItem({image, caption, likes}) {
                 className="w-48 h-40 object-cover rounded-md"
                 />
             </div>
-
-            <div className="flex justify-start w-full mt-2">
-                <div className="text-sm">
-                    <p>♥️ {likes}</p>
-                </div>
-            </div>
-            <div>
+            <div className="mt-4">
                 <p className="text-sm">{caption}</p>
             </div>
 
