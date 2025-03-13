@@ -87,7 +87,7 @@ export const unfollow = async (req, res) => {
         const unfollow = await User.findOneAndUpdate({'userID':userUnfollow},
             {
                 $inc: { 'numFollowers': -1},
-                $pull: { 'follower': myID}
+                $pull: { 'followers': myID}
 
             },
             {new : true}
