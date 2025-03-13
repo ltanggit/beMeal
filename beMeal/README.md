@@ -43,7 +43,7 @@ Inspired by the spontaneity and authenticity of social media applications like B
         In VSCode: **Ctrl-Shift-`**
 3. Navigate to the correct directory with this command: (may have to run this twice!*)
     ```Bash
-    cd bemeal
+    cd beMeal
     ```
     ***Note: Our project source code is wrapped in a second "bemeal" folder inside the general "bemeal" repository. Please make sure to cd into the second bemeal directory.**
 
@@ -65,7 +65,7 @@ Inspired by the spontaneity and authenticity of social media applications like B
         In VSCode: Ctrl-Shift-`
 8. (May be optional) Navigate to the correct directory with this command: (see note above for clarification!*)
     ```Bash
-    cd bemeal
+    cd beMeal
     ```
 9. Run the frontend:
     ```Bash
