@@ -35,7 +35,6 @@ postRoutes.post(
       if (!user) {
         return res.status(400).json({ error: "user does not exist" });
       }
-      // console.log("Uploaded file details:", req.file);
 
       const cloudinaryUpload = await cloudinary.uploader.upload(req.file.path, {
         folder: "postImages",
@@ -58,9 +57,6 @@ postRoutes.post(
 
       const result = await newPost.save();
 
-      //updates lastpostdate for the user when they make post, can change depending on updatestreak
-      // user.lastPostDate = new Date();
-
       user.posts.push(result._id);
       await user.save();
 
@@ -71,8 +67,6 @@ postRoutes.post(
     }
   }
 );
-
-//change allPosts to getFeed
 
 postRoutes.get("/allPosts", authMiddleware, async (req, res) => {
   try {
@@ -136,44 +130,6 @@ postRoutes.get("/getUserPosts/:userID", authMiddleware, async (req, res) => {
   }
 });
 
-postRoutes.put("/incLikes/:_postId", authMiddleware, async (req, res) => {
-  try {
-    const postId = req.params._postId;
-    const post = await Post.findById(postId);
-
-    if (!post) {
-      return res.status(404).json({ error: "post not found" });
-    }
-
-    post.likeCount += 1;
-    const result = await post.save();
-
-    res.status(200).json(result);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "error updating likes" });
-  }
-});
-
-postRoutes.put("/decLikes/:_postId", authMiddleware, async (req, res) => {
-  try {
-    const postId = req.params._postId;
-    const post = await Post.findById(postId);
-
-    if (!post) {
-      return res.status(404).json({ error: "post not found" });
-    }
-
-    post.likeCount -= 1;
-    const result = await post.save();
-
-    res.status(200).json(result);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "error decrementing like" });
-  }
-});
-
 postRoutes.get("/getPost/:_postId", authMiddleware, async (req, res) => {
   try {
     const postId = req.params._postId;
@@ -187,51 +143,6 @@ postRoutes.get("/getPost/:_postId", authMiddleware, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "error getting post" });
-  }
-});
-
-postRoutes.post("/:postId/addComment", authMiddleware, async (req, res) => {
-  try {
-    const { postId } = req.params;
-    const { username, content } = req.body;
-
-    if (!username || !content) {
-      return res.status(400).json({ error: "all fields are required" });
-    }
-
-    const post = await Post.findById(postId);
-    if (!post) {
-      return res.status(404).json({ error: "post not found" });
-    }
-
-    const newComment = {
-      username,
-      content,
-      timestamp: new Date(),
-    };
-
-    post.comments.push(newComment);
-
-    await post.save();
-    res.status(201).json(post);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "error adding comment" });
-  }
-});
-
-postRoutes.get("/:postId/getComments", authMiddleware, async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.postId);
-
-    if (!post) {
-      return res.status(404).json({ error: "post not found" });
-    }
-
-    res.status(200).json(post.comments);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "error getting comments" });
   }
 });
 
