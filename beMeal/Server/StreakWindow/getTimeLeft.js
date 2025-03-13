@@ -31,8 +31,6 @@ export const getTimeLeft = async (req, res) => {
 
         res.status(200).json({ timeLeft: formattedTimeLeft });
 
-        // res.status(200).json({ timeLeft: `${hoursLeft} hours, ${minutesLeft} minutes, ${secondsLeft} seconds` });
-
     } catch (error) {
         console.error('Error fetching time left:', error);
         res.status(500).json({ error: 'Internal Server Error' });

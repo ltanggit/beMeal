@@ -90,6 +90,10 @@ If you run into installation errors on **STEP 4**, you may have to run the follo
     rmdir node_modules
     npm install
     ```
+- **Network** Errors:
+    Please make sure you are **NOT** using **UCLA_WEB**!
+    
+        Instead, use **eduroam** or **uclawifi**
 
 ## Credits/Resources/References/Inspo
 - [BeReal](https://bereal.com/)
