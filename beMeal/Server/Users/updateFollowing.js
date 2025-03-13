@@ -21,10 +21,10 @@ export const follow = async (req, res) => {
         const Followers = await User.findOneAndUpdate({'userID':userFollow},
             {
                 $inc: { 'numFollowers': 1},
-                $push: { 'follower': myID}
+                $push: { 'followers': myID}
 
-            }
-         );
+            },
+            {new : true});
 
          if(!Followers){
             return res.status(404).json({ error: "User trying to follow is not found" });
