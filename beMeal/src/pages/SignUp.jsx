@@ -5,7 +5,6 @@ import { useAuth } from "../context/AuthContext";
 export default function SignUp() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -27,7 +26,9 @@ export default function SignUp() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Registration failed");
+        // Log the error silently instead of displaying it
+        console.error(data.error || "Registration failed");
+        return;
       }
 
       const loginResponse = await fetch("http://localhost:5050/accounts/login", {
@@ -44,13 +45,14 @@ export default function SignUp() {
       const loginData = await loginResponse.json();
 
       if (!loginResponse.ok) {
-        throw new Error(loginData.error || "Login failed after registration");
+        console.error(loginData.error || "Login failed after registration");
+        return;
       }
 
       login(loginData.token);
       navigate("/feed");
     } catch (error) {
-      setError(error.message);
+      console.error(error.message);
     }
   };
 
@@ -83,11 +85,8 @@ export default function SignUp() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-3 py-2 bg-[#333] text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
             required
-          /> 
+          />
         </div>
-        {error && (
-          <p className="text-red-500 mb-4">{error}</p>
-        )}
         <button
           type="submit"
           className="w-full bg-white text-black py-2 rounded-lg text-lg font-bold hover:bg-gray-200 transition"
