@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 
 export default function Feed() {
   const [posts, setPosts] = useState([]);
@@ -25,7 +26,37 @@ export default function Feed() {
           throw new Error(errorData.error || "Failed to fetch feed");
         }
         const data = await response.json();
-        setPosts(data);
+
+        const updatedPosts = await Promise.all(
+          data.map(async (post) => {
+            try {
+              const token = localStorage.getItem("token");
+              const res = await axios.put(
+                "http://localhost:5050/users/searchUsers",
+                {
+                  search: post.username, 
+                  userID: user.userID,
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${user.token}`,
+                  },
+                }
+              );
+              if (res.data.users && res.data.users.length > 0) {
+                post.profilePic = res.data.users[0].profilePic;
+              } else {
+                post.profilePic = "/fallback-profile-pic.png";
+              }
+            } catch (err) {
+              console.error("Error fetching profilePic for post user:", err);
+              post.profilePic = "/fallback-profile-pic.png";
+            }
+            return post;
+          })
+        );
+
+        setPosts(updatedPosts);
         setCurrentIndex(0);
       } catch (error) {
         console.error("Error fetching feed:", error);
@@ -57,7 +88,11 @@ export default function Feed() {
           {posts.length > 0 ? (
             <>
               <div className="flex items-center mb-2">
-                <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
+                <img 
+                  src={posts[currentIndex].profilePic} 
+                  alt={`${posts[currentIndex].username}'s profile`}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
                 <span className="ml-2 font-semibold">
                   {posts[currentIndex].username}
                 </span>

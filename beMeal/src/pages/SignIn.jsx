@@ -82,12 +82,6 @@ export default function SignIn() {
                 LOG IN
               </button>
             </form>
-            <a
-              href="#"
-              className="text-blue-400 mt-3 inline-block underline hover:text-blue-300"
-            >
-              Reset your password
-            </a>
           </div>
 
           <div className="flex-1 flex flex-col justify-center">
