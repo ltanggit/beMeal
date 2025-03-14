@@ -4,6 +4,7 @@ CS35L Winter 2025 Project Developed By Team **Sn-Hackers**! See below for projec
 ## Overview
 1. [Members](#project-members)
 2. [Description](#project-description)
+3. [Tech Stack](#technologies-used-tech-stack)
 3. [Features](#special-project-features)
 4. [Requirements](#additional-project-requirements)
 5. [SETUP INSTRUCTIONS: How To Run Project Locally](#how-to-run-project-locally)
@@ -15,6 +16,25 @@ Frontend Developers: Lillian Gonick, Max Lee
 
 ## Project Description
 Inspired by the spontaneity and authenticity of social media applications like BeReal, Beli, and Instagram, “BeMEAL” is a website application designed to bring young adults together through a shared love of food. BeMeal allows users to capture and share their meals in real time, encouraging a genuine and unfiltered view of what people are eating around the world. The app prompts users to take a photo of whatever meal they’re eating at that moment for two hour-long periods during mealtimes throughout the day which then appears on their friends’ feed. BeMeal also encourages community by enabling users to interact with others on the platform through the use of features such as following friends as well as scrolling through their friends' posts. Whether it’s a home-cooked dish, a restaurant meal, or a quick snack, the goal is to connect people through the universal experience of food while celebrating diversity in culinary habits.
+
+## Technologies Used (Tech Stack)
+**Primary Teck Stack Used: MERN**
+- MongoDB database
+- Express server
+- Node.js
+- React
+
+**Additional Imports/Technologies Used:**
+- Cloudinary: cloud storage database for images
+- Bcrypt: for hashing passwords
+- JWT: for making javascript web tokens
+- Axios: api for handling HTTP requests
+
+**Languages:**
+- Javascript
+- HTML (jsx)
+- TailwindCSS
+
 
 ## Special Project Features
 1. Users can upload posts with photos and captions of their food throughout the day in real time.
