@@ -1,2 +1,2 @@
 # beMeal
-CS35L Project
+beReal but for food!
